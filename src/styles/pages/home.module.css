@@ -1188,6 +1188,16 @@
   margin-top: 1.25rem;
 }
 
+.pythonProjectsBody .projectLogo {
+  width: 84px;
+}
+
+@media (max-width: 768px) {
+  .pythonProjectsBody .projectLogo {
+    width: 72px;
+  }
+}
+
 .pastDesign {
   margin-top: 3.5rem;
 }
@@ -1573,7 +1583,7 @@
 }
 
 .modalSectionTitle {
-  margin: 1.5rem 0 0.75rem;
+  margin: 0;
   font-size: 1.1rem;
   font-weight: 700;
   color: #000;
@@ -1586,8 +1596,12 @@
 }
 
 .modalList {
-  margin: 0.5rem 0 0;
+  margin: 0;
   padding-left: 1.25rem;
+}
+
+.modalSectionTitle + .modalList {
+  margin-top: -0.75rem;
 }
 
 .modalList li {
@@ -1666,6 +1680,23 @@
   }
 }
 
+.inlineCode {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  font-size: 0.95em;
+  padding: 0.15em 0.35em;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .inlineCode {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.14);
+  }
+}
+
 .externalIcon {
   width: 18px;
   height: 18px;
@@ -1700,9 +1731,143 @@
   }
 }
 
+.modalCarousel {
+  position: relative;
+}
+
+.modalCarouselTrack {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.modalCarouselTrack::-webkit-scrollbar {
+  display: none;
+}
+
+.modalCarouselSlide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.modalCarouselButtons {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.5rem;
+  pointer-events: none;
+}
+
+.modalCarouselButton {
+  pointer-events: auto;
+  width: 2.3rem;
+  height: 2.3rem;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  background: rgba(255, 255, 255, 0.9);
+  color: #171717;
+  font-size: 1.6rem;
+  line-height: 1;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s, opacity 0.2s;
+}
+
+.modalCarouselButton:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.98);
+  border-color: rgba(0, 0, 0, 0.28);
+}
+
+.modalCarouselButton:disabled {
+  opacity: 0.35;
+  transform: none;
+  cursor: default;
+}
+
+.modalCarouselButton:focus-visible {
+  outline: 3px solid rgba(59, 130, 246, 0.6);
+  outline-offset: 3px;
+}
+
+.modalCarouselDots {
+  margin-top: 0.75rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.modalCarouselDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  background: rgba(0, 0, 0, 0.12);
+  transition: transform 0.15s, background 0.2s, border-color 0.2s, opacity 0.2s;
+  opacity: 0.55;
+}
+
+.modalCarouselDot:hover {
+  opacity: 0.9;
+  transform: scale(1.08);
+}
+
+.modalCarouselDotActive {
+  opacity: 1;
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.modalCarouselDot:focus-visible {
+  outline: 3px solid rgba(59, 130, 246, 0.6);
+  outline-offset: 3px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .modalCarouselButton {
+    border-color: rgba(255, 255, 255, 0.18);
+    background: rgba(0, 0, 0, 0.55);
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  .modalCarouselButton:hover {
+    background: rgba(0, 0, 0, 0.72);
+    border-color: rgba(255, 255, 255, 0.28);
+  }
+
+  .modalCarouselDot {
+    border-color: rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.14);
+  }
+
+  .modalCarouselDotActive {
+    background: #60a5fa;
+    border-color: #60a5fa;
+  }
+}
+
+.modalEmbed {
+  display: flex;
+  justify-content: center;
+}
+
+.modalEmbedImage {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
 .projectCardMain {
   flex: 1 1 auto;
   min-width: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
 }
 
 .projectCardAside {
@@ -2084,6 +2249,7 @@
   font-weight: 700;
   color: #2563eb;
   text-decoration: none;
+  margin-top: auto;
 }
 
 .projectLink:hover {
@@ -2093,6 +2259,67 @@
 @media (prefers-color-scheme: dark) {
   .projectLink {
     color: #60a5fa;
+  }
+}
+
+.githubStarsButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  background: rgba(0, 0, 0, 0.03);
+  color: #171717;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  line-height: 1;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.githubStarsButton:hover {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.githubStarsButton:focus-visible {
+  outline: 3px solid rgba(59, 130, 246, 0.6);
+  outline-offset: 3px;
+}
+
+.githubStarsIcon {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  opacity: 0.92;
+}
+
+.githubStarsText {
+  white-space: nowrap;
+}
+
+.githubStarsCount {
+  padding: 0.2rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.08);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-color-scheme: dark) {
+  .githubStarsButton {
+    border-color: rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  .githubStarsButton:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.22);
+  }
+
+  .githubStarsCount {
+    background: rgba(255, 255, 255, 0.12);
   }
 }
 

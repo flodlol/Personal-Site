@@ -1,9 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useId, useRef, useState } from "react";
+import { Fragment, useEffect, useId, useRef, useState } from "react";
 import styles from "../../styles/pages/home.module.css";
 import type { Project } from "../content/projects";
+import GithubStarsButton from "./GithubStarsButton";
+import ModalCarousel from "./ModalCarousel";
 
 function formatStack(stack?: Project["stack"]) {
   if (!stack) return null;
@@ -21,44 +23,94 @@ function isSafeLinkHref(href: string) {
   }
 }
 
+function isGifImage(src: string) {
+  return src.toLowerCase().endsWith(".gif");
+}
+
 function renderParagraphText(text: string) {
-  const parts: React.ReactNode[] = [];
-  const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+  const renderLinks = (chunk: string) => {
+    const parts: React.ReactNode[] = [];
+    const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+    let lastIndex = 0;
+    let match: RegExpExecArray | null = null;
+
+    while ((match = linkRegex.exec(chunk))) {
+      const [fullMatch, label, href] = match;
+      const startIndex = match.index;
+
+      if (startIndex > lastIndex) {
+        parts.push(chunk.slice(lastIndex, startIndex));
+      }
+
+      if (label && href && isSafeLinkHref(href)) {
+        parts.push(
+          <a
+            key={`${href}-${startIndex}`}
+            className={styles.modalInlineLink}
+            href={href}
+            target={href.startsWith("/") ? undefined : "_blank"}
+            rel={href.startsWith("/") ? undefined : "noopener noreferrer"}
+          >
+            {label}
+          </a>,
+        );
+      } else {
+        parts.push(fullMatch);
+      }
+
+      lastIndex = startIndex + fullMatch.length;
+    }
+
+    if (lastIndex < chunk.length) {
+      parts.push(chunk.slice(lastIndex));
+    }
+
+    return parts;
+  };
+
+  const nodes: React.ReactNode[] = [];
+  const codeRegex = /`([^`]+)`/g;
   let lastIndex = 0;
   let match: RegExpExecArray | null = null;
 
-  while ((match = linkRegex.exec(text))) {
-    const [fullMatch, label, href] = match;
+  while ((match = codeRegex.exec(text))) {
+    const [fullMatch, code] = match;
     const startIndex = match.index;
 
     if (startIndex > lastIndex) {
-      parts.push(text.slice(lastIndex, startIndex));
+      nodes.push(...renderLinks(text.slice(lastIndex, startIndex)));
     }
 
-    if (label && href && isSafeLinkHref(href)) {
-      parts.push(
-        <a
-          key={`${href}-${startIndex}`}
-          className={styles.modalInlineLink}
-          href={href}
-          target={href.startsWith("/") ? undefined : "_blank"}
-          rel={href.startsWith("/") ? undefined : "noopener noreferrer"}
-        >
-          {label}
-        </a>,
-      );
-    } else {
-      parts.push(fullMatch);
-    }
+    nodes.push(
+      <code key={`code-${startIndex}`} className={styles.inlineCode}>
+        {code}
+      </code>,
+    );
 
     lastIndex = startIndex + fullMatch.length;
   }
 
   if (lastIndex < text.length) {
-    parts.push(text.slice(lastIndex));
+    nodes.push(...renderLinks(text.slice(lastIndex)));
   }
 
-  return parts;
+  return nodes;
+}
+
+function getGitHubRepoFromHref(href: string) {
+  try {
+    const url = new URL(href);
+    const hostname = url.hostname.replace(/^www\./, "");
+    if (hostname !== "github.com") return null;
+
+    const [owner, repo] = url.pathname.split("/").filter(Boolean);
+    if (!owner || !repo) return null;
+
+    const normalizedRepo = repo.replace(/\.git$/, "");
+    return `${owner}/${normalizedRepo}`;
+  } catch {
+    return null;
+  }
 }
 
 export default function ProjectCards({
@@ -350,6 +402,7 @@ export default function ProjectCards({
                           alt={block.alt}
                           width={block.width}
                           height={block.height}
+                          unoptimized={isGifImage(block.src)}
                           sizes="(max-width: 768px) 92vw, 720px"
                         />
                       );
@@ -366,10 +419,61 @@ export default function ProjectCards({
                               alt={image.alt}
                               width={image.width}
                               height={image.height}
+                              unoptimized={isGifImage(image.src)}
                               sizes="(max-width: 640px) 92vw, 340px"
                             />
                           ))}
                         </div>
+                      );
+                    }
+
+                    if (block.type === "sectionTitle") {
+                      return (
+                        <h4 key={index} className={styles.modalSectionTitle}>
+                          {block.text}
+                        </h4>
+                      );
+                    }
+
+                    if (block.type === "list") {
+                      const ListTag = block.ordered ? "ol" : "ul";
+
+                      return (
+                        <ListTag key={index} className={styles.modalList}>
+                          {block.items.map((item, itemIndex) => (
+                            <li key={`${index}-${itemIndex}`}>
+                              {renderParagraphText(item)}
+                            </li>
+                          ))}
+                        </ListTag>
+                      );
+                    }
+
+                    if (block.type === "carousel") {
+                      return (
+                        <ModalCarousel key={index} label={block.label} images={block.images} />
+                      );
+                    }
+
+                    if (block.type === "embed") {
+                      return (
+                        <a
+                          key={index}
+                          className={styles.modalEmbed}
+                          href={block.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            className={styles.modalEmbedImage}
+                            src={block.imgSrc}
+                            alt={block.alt}
+                            width={block.width}
+                            height={block.height}
+                            loading="lazy"
+                          />
+                        </a>
                       );
                     }
 
@@ -400,28 +504,37 @@ export default function ProjectCards({
 
                   return (
                     <div className={styles.modalLinks}>
-                      {links.map((link) => (
-                        <a
-                          key={link.href}
-                          className={styles.modalLink}
-                          href={link.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {link.label}
-                          <svg
-                            className={styles.externalIcon}
-                            viewBox="0 0 24 24"
-                            aria-hidden="true"
-                            focusable="false"
-                          >
-                            <path
-                              fill="currentColor"
-                              d="M14 3h7v7h-2V6.4l-9.3 9.3-1.4-1.4L17.6 5H14V3ZM5 5h6v2H7v10h10v-4h2v6H5V5Z"
-                            />
-                          </svg>
-                        </a>
-                      ))}
+                      {links.map((link) => {
+                        const linkGithubRepo = getGitHubRepoFromHref(link.href);
+
+                        return (
+                          <Fragment key={`${link.href}-${link.label}`}>
+                            <a
+                              className={styles.modalLink}
+                              href={link.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {link.label}
+                              <svg
+                                className={styles.externalIcon}
+                                viewBox="0 0 24 24"
+                                aria-hidden="true"
+                                focusable="false"
+                              >
+                                <path
+                                  fill="currentColor"
+                                  d="M14 3h7v7h-2V6.4l-9.3 9.3-1.4-1.4L17.6 5H14V3ZM5 5h6v2H7v10h10v-4h2v6H5V5Z"
+                                />
+                              </svg>
+                            </a>
+
+                            {linkGithubRepo ? (
+                              <GithubStarsButton repo={linkGithubRepo} />
+                            ) : null}
+                          </Fragment>
+                        );
+                      })}
                     </div>
                   );
                 })()}

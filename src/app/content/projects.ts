@@ -20,6 +20,33 @@ export type ProjectModalContentBlock =
       text: string;
     }
   | {
+      type: "sectionTitle";
+      text: string;
+    }
+  | {
+      type: "list";
+      items: string[];
+      ordered?: boolean;
+    }
+  | {
+      type: "carousel";
+      label: string;
+      images: Array<{
+        src: string;
+        alt: string;
+        width: number;
+        height: number;
+      }>;
+    }
+  | {
+      type: "embed";
+      href: string;
+      imgSrc: string;
+      alt: string;
+      width: number;
+      height: number;
+    }
+  | {
       type: "image";
       src: string;
       alt: string;
@@ -77,19 +104,82 @@ export const currentProjects: Project[] = [
       height: 240,
     },
     modal: {
-      paragraphs: [
-        "Study-Track is a study tracking platform I’m actively building to help students understand where their time actually goes and develop more consistent study habits. The idea came from noticing how easy it is to feel busy while still having no clear picture of what you’ve done.",
-        "Study-Track automatically syncs academic schedules, lets users track study sessions with minimal friction, and turns that data into clear, visual insights that actually mean something. The goal isn’t to gamify studying endlessly, but to make progress visible and actionable.",
-        "I’m working across the full product: designing features, implementing the core logic, and refining the UI to reduce friction and cognitive load.",
-        "On top of individual tracking, the app includes a social layer where friends can study alongside each other, compare progress, and stay motivated without it feeling competitive or noisy.",
-        "This project is still evolving and serves as a hands-on way for me to experiment with product decisions, UX trade-offs, and building something people genuinely come back to.",
+      content: [
+        {
+          type: "paragraph",
+          text: "Study-Track is a study tracking platform I’m actively building to help students understand where their time actually goes and develop more consistent study habits. The idea came from noticing how easy it is to feel busy while still having no clear picture of what you’ve done.",
+        },
+        {
+          type: "image",
+          src: "/study-track/home-page.png",
+          alt: "Study-Track homepage screenshot",
+          width: 2940,
+          height: 1476,
+        },
+        {
+          type: "paragraph",
+          text: "Study-Track automatically syncs academic schedules, lets users track study sessions with minimal friction, and turns that data into clear, visual insights that actually mean something. The goal isn’t to gamify studying endlessly, but to make progress visible and actionable.",
+        },
+        { type: "sectionTitle", text: "Feature previews" },
+        {
+          type: "carousel",
+          label: "Study-Track feature previews",
+          images: [
+            {
+              src: "/study-track/features/preview-1.webp",
+              alt: "Study-Track feature preview 1",
+              width: 2978,
+              height: 2072,
+            },
+            {
+              src: "/study-track/features/preview-2.webp",
+              alt: "Study-Track feature preview 2",
+              width: 2978,
+              height: 2072,
+            },
+            {
+              src: "/study-track/features/preview-3.webp",
+              alt: "Study-Track feature preview 3",
+              width: 2978,
+              height: 2072,
+            },
+            {
+              src: "/study-track/features/preview-4.webp",
+              alt: "Study-Track feature preview 4",
+              width: 2978,
+              height: 2072,
+            },
+            {
+              src: "/study-track/features/preview-5.webp",
+              alt: "Study-Track feature preview 5",
+              width: 2978,
+              height: 2072,
+            },
+          ],
+        },
+        {
+          type: "paragraph",
+          text: "I’m working across the full product: designing features, implementing the core logic, and refining the UI to reduce friction and cognitive load.",
+        },
+        {
+          type: "paragraph",
+          text: "On top of individual tracking, the app includes a social layer where friends can study alongside each other, compare progress, and stay motivated without it feeling competitive or noisy.",
+        },
+        {
+          type: "paragraph",
+          text: "This project is still evolving and serves as a hands-on way for me to experiment with product decisions, UX trade-offs, and building something people genuinely come back to.",
+        },
+        { type: "sectionTitle", text: "Product Hunt" },
+        {
+          type: "embed",
+          href: "https://www.producthunt.com/products/study-track?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-study-track",
+          imgSrc:
+            "https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1084993&theme=dark&t=1772059059488",
+          alt: "Study-Track - A study planner for your week, track real progress | Product Hunt",
+          width: 250,
+          height: 54,
+        },
       ],
-      screenshot: {
-        src: "/study-track/home-page.png",
-        alt: "Study-Track homepage screenshot",
-        width: 2940,
-        height: 1476,
-      },
     },
   },
   {
@@ -98,8 +188,14 @@ export const currentProjects: Project[] = [
     period: "February 2026 - Now",
     stack: "Next.js · TypeScript · PDF.js",
     description:
-      "A PDF handout generator that converts slide decks into clean, writeable handouts so it’s easy to take notes during lectures.",
-    link: { href: "https://hand-outs.com", label: "Visit hand-outs.com" },
+      "A PDF handout generator that converts slide decks into clean, writeable handouts — perfect for taking notes during lectures without wrestling with cramped slides.",
+    links: [
+      { href: "https://hand-outs.com", label: "Visit hand-outs.com" },
+      {
+        href: "https://github.com/flodlol/PDF-Slides-to-Hand-Outs",
+        label: "GitHub Repository",
+      },
+    ],
     logo: {
       src: "/hand-outs/hand-outs-logo.png",
       alt: "Hand-Outs logo",
@@ -107,11 +203,50 @@ export const currentProjects: Project[] = [
       height: 1024,
     },
     modal: {
-      paragraphs: [
-        "Hand-Outs started as a very specific frustration: professors sharing slide decks as PDFs, but leaving no practical way to annotate them during class. I wanted something that could turn those slides into real handouts in seconds.",
-        "The app takes any PDF slide deck and lays it out into printable, writeable handout pages. You can pick the number of slides per page, control spacing, and add consistent note areas so handwriting doesn’t feel cramped.",
-        "The goal is to keep the original slides readable while giving you enough breathing room to actually use the handout as a working document during lectures.",
-        "I’m actively refining layout presets and export quality so the handouts look good on screen and print cleanly without manual tweaking.",
+      content: [
+        {
+          type: "paragraph",
+          text: "Hand-Outs started as a very specific frustration: professors share slide decks as PDFs, but those PDFs are not built for note-taking. You either print tiny slides with no space, or you annotate on top of the content and it gets messy fast. I wanted a quick way to turn “slides” into “handouts”.",
+        },
+        {
+          type: "image",
+          src: "/hand-outs/preview.gif",
+          alt: "Hand-Outs preview showing a PDF being converted into a writeable handout layout",
+          width: 1920,
+          height: 1080,
+        },
+        {
+          type: "paragraph",
+          text: "The app takes a PDF slide deck and reflows it into pages that are actually usable during a lecture: readable slides, consistent margins, and dedicated whitespace for writing. The focus is on keeping the original slides clear while adding enough breathing room to make the output feel like a real working document.",
+        },
+        { type: "sectionTitle", text: "What it does" },
+        {
+          type: "list",
+          items: [
+            "Converts PDF slide decks into handout-style pages.",
+            "Lets you choose how many slides appear per page.",
+            "Adds writeable space so notes don’t overlap the slides.",
+            "Exports a clean, print-friendly PDF (also nice for tablet annotation).",
+          ],
+        },
+        { type: "sectionTitle", text: "How it works" },
+        {
+          type: "list",
+          ordered: true,
+          items: [
+            "Upload a PDF slide deck.",
+            "Pick a layout (slides per page, spacing, and note area).",
+            "Generate and download the handout PDF.",
+          ],
+        },
+        {
+          type: "paragraph",
+          text: "Implementation-wise it’s built with Next.js + TypeScript, and uses PDF.js to read and render the source PDF accurately before producing the final handout layout.",
+        },
+        {
+          type: "paragraph",
+          text: "I’m actively iterating on layout presets and export quality so the results look good on screen and print cleanly without manual tweaking.",
+        },
       ],
     },
   },
@@ -166,15 +301,136 @@ export const smallerPythonProjects: Project[] = [
     period: "August 2024",
     stack: "Python",
     description:
-      "A lightweight generator that spits out low-effort meme reels fast so you can get the joke out without over-editing.",
+      "A small Python project for generating quick, meme-style reels with minimal setup — built for speed, iteration, and “good enough” output when you just want to ship the joke.",
     link: {
       href: "https://github.com/flodlol/Reel-Generator",
       label: "View on GitHub",
     },
+    logo: {
+      src: "/reel-generator/reel-generator-logo.png",
+      alt: "Reel-Generator logo",
+      width: 1024,
+      height: 1024,
+    },
     modal: {
-      paragraphs: [
-        "Reel-Generator is a small Python tool that creates quick, meme-style reels with minimal setup.",
-        "The focus is on speed and repeatability: generate a ready-to-share clip without fiddling with timelines or manual exports.",
+      content: [
+        {
+          type: "paragraph",
+          text: "Reel-Generator is a small Python tool I built to generate quick, meme-style reels with minimal setup. It’s aimed at the “I have an idea right now” moment — where opening a full editor, setting up timelines, and exporting multiple versions feels like overkill.",
+        },
+        {
+          type: "paragraph",
+          text: "The core idea is speed + repeatability: take a simple input (your clip / template / assets), apply a consistent format, and export a ready-to-share result so you can iterate on the joke instead of on the tooling.",
+        },
+        { type: "sectionTitle", text: "What it’s for" },
+        {
+          type: "list",
+          items: [
+            "Generating short-form meme reels quickly.",
+            "Making multiple variations fast (timing, captions, punchlines) without redoing the same steps.",
+            "Keeping output consistent across a bunch of low-effort clips.",
+          ],
+        },
+        { type: "sectionTitle", text: "How I use it" },
+        {
+          type: "list",
+          ordered: true,
+          items: [
+            "Drop in the input clip/assets for the reel.",
+            "Adjust the few parameters that matter for the joke (timing, text, etc.).",
+            "Run the generator to export the final video.",
+            "Repeat until the clip feels right.",
+          ],
+        },
+        { type: "sectionTitle", text: "Notes" },
+        {
+          type: "list",
+          items: [
+            "This is intentionally kept lightweight: it’s not trying to replace a full editor.",
+            "Video rendering pipelines can be environment-specific; the GitHub repo includes the exact setup and usage instructions.",
+          ],
+        },
+      ],
+    },
+  },
+  {
+    id: "username-checker",
+    title: "Username Availability Checker",
+    period: "February 2026",
+    stack: "Python 3.8+",
+    description:
+      "A Python CLI that checks whether a username is available on a handful of popular platforms, with clear terminal output and manual-check fallbacks where needed.",
+    link: {
+      href: "https://github.com/flodlol/Username-Availability-Checker",
+      label: "View on GitHub",
+    },
+    modal: {
+      content: [
+        {
+          type: "paragraph",
+          text: "Username Availability Checker is a small Python CLI I built in February 2026 to quickly check if a username/handle is likely available across a set of popular developer + creator platforms — without opening 10 tabs every time I’m naming a project or creating an account.",
+        },
+        {
+          type: "image",
+          src: "/username-checker/preview.png",
+          alt: "Username Availability Checker terminal preview",
+          width: 2258,
+          height: 1276,
+        },
+        {
+          type: "paragraph",
+          text: "It runs all checks concurrently and prints a clean table with color-coded statuses. The output is intentionally “best-effort”: if a platform can’t be checked reliably without heavy scraping/JS rendering, the tool marks it as unknown and gives you the profile URL to verify manually.",
+        },
+        { type: "sectionTitle", text: "Highlights" },
+        {
+          type: "list",
+          items: [
+            "Fast, concurrent checks using `asyncio` + `httpx`.",
+            "Color-coded statuses: available, taken, unknown, error.",
+            "Lightweight approach that avoids API keys and heavy scraping.",
+            "Easy to extend: platforms live in a simple list in `platforms.py`.",
+          ],
+        },
+        { type: "sectionTitle", text: "Platforms" },
+        {
+          type: "list",
+          items: [
+            "Automatically checked: GitHub, Reddit, GitLab, Bitbucket, Dev.to, CodePen, Dribbble, Behance, Hugging Face",
+            "Manual/unknown by default (JS-heavy): X, TikTok, Figma",
+          ],
+        },
+        {
+          type: "paragraph",
+          text: "For most platforms the check is based on simple HTTP responses (for example, 404 usually means the profile doesn’t exist). For a few platforms that are JS-heavy or inconsistent, the tool intentionally doesn’t guess — it returns unknown and links you to the profile page instead.",
+        },
+        { type: "sectionTitle", text: "How it works" },
+        {
+          type: "list",
+          ordered: true,
+          items: [
+            "Define platforms in `platforms.py` using a URL template like `https://github.com/{username}`.",
+            "Run requests in parallel and interpret results (200 = taken, 404 = available).",
+            "If a platform is unreliable without JS, mark it as unreliable so it becomes a manual check.",
+          ],
+        },
+        { type: "sectionTitle", text: "Tech" },
+        {
+          type: "list",
+          items: [
+            "Python 3.8+",
+            "httpx (async HTTP)",
+            "asyncio",
+            "colorama (terminal colors)",
+          ],
+        },
+        {
+          type: "paragraph",
+          text: "Because platforms change over time (rate limits, redirects, anti-bot measures), results are not guaranteed — the tool is meant as a quick first pass to save time, not as a perfect source of truth.",
+        },
+        {
+          type: "paragraph",
+          text: "The project is open source under the MIT License, and the full code is available on GitHub.",
+        },
       ],
     },
   },

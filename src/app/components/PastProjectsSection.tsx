@@ -11,7 +11,7 @@ export default function PastProjectsSection() {
   return (
     <section className={styles.section} aria-labelledby="past-projects">
       <h2 className={styles.sectionTitle} id="past-projects">
-        Past projects
+        Past / Other projects
       </h2>
       <p className={styles.sectionText}>
         A few older things I&apos;ve built and learned from.
