@@ -200,11 +200,13 @@
 .heroSkills {
   width: 100%;
   max-width: 760px;
-  margin-top: 1.75rem;
+  margin-top: 2rem;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 0.35rem 1.5rem;
 }
 
 /* Skills timeline (MUI-inspired) */
@@ -655,37 +657,27 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.35rem;
+  display: contents;
 }
 
 .heroSkillItem {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.2rem 0.4rem;
-  border-radius: 999px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background: rgba(0, 0, 0, 0.015);
-  font-size: 0.74rem;
-  font-weight: 600;
-  color: #404040;
-  opacity: 0.62;
-  transition: opacity 140ms ease-out;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #737373;
+  transition: color 0.15s;
 }
 
 .heroSkillItem:hover,
 .heroSkillItem:focus-visible {
-  opacity: 1;
+  color: #404040;
 }
 
 .heroSkillIcon {
   width: 14px;
   height: 14px;
-  color: rgba(0, 0, 0, 0.4);
-  opacity: 0.7;
   flex: 0 0 auto;
 }
 
@@ -693,142 +685,32 @@
   line-height: 1;
 }
 
-.heroSkillItem[data-icon="typescript"] {
-  border-color: rgba(49, 120, 198, 0.32);
-  background: rgba(49, 120, 198, 0.06);
-}
-
-.heroSkillItem[data-icon="typescript"] .heroSkillIcon {
-  color: #3178c6;
-  opacity: 0.95;
-}
-
-.heroSkillItem[data-icon="javascript"] {
-  border-color: rgba(247, 223, 30, 0.36);
-  background: rgba(247, 223, 30, 0.08);
-}
-
-.heroSkillItem[data-icon="javascript"] .heroSkillIcon {
-  color: #f7df1e;
-  opacity: 0.95;
-}
-
-.heroSkillItem[data-icon="python"] {
-  border-color: rgba(55, 118, 171, 0.32);
-  background: rgba(55, 118, 171, 0.07);
-}
-
-.heroSkillItem[data-icon="python"] .heroSkillIcon {
-  color: #3776ab;
-  opacity: 0.95;
-}
-
-.heroSkillItem[data-icon="html"] {
-  border-color: rgba(227, 79, 38, 0.32);
-  background: rgba(227, 79, 38, 0.07);
-}
-
-.heroSkillItem[data-icon="html"] .heroSkillIcon {
-  color: #e34f26;
-  opacity: 0.95;
-}
-
-.heroSkillItem[data-icon="css"] {
-  border-color: rgba(38, 77, 228, 0.32);
-  background: rgba(38, 77, 228, 0.07);
-}
-
-.heroSkillItem[data-icon="css"] .heroSkillIcon {
-  color: #264de4;
-  opacity: 0.95;
-}
-
-.heroSkillItem[data-icon="photoshop"] {
-  border-color: rgba(49, 168, 255, 0.32);
-  background: rgba(49, 168, 255, 0.07);
-}
-
-.heroSkillItem[data-icon="photoshop"] .heroSkillIcon {
-  color: #31a8ff;
-  opacity: 0.95;
-}
-
-.heroSkillItem[data-icon="cinema4d"] {
-  border-color: rgba(155, 81, 224, 0.3);
-  background: rgba(155, 81, 224, 0.07);
-}
-
-.heroSkillItem[data-icon="cinema4d"] .heroSkillIcon {
-  color: #9b51e0;
-  opacity: 0.95;
-}
-
-.heroSkillItem[data-icon="figma"] {
-  border-color: rgba(162, 89, 255, 0.3);
-  background: rgba(162, 89, 255, 0.07);
-}
-
-.heroSkillItem[data-icon="figma"] .heroSkillIcon {
-  color: #a259ff;
-  opacity: 0.95;
-}
+.heroSkillItem[data-icon="typescript"] .heroSkillIcon { color: #3178c6; }
+.heroSkillItem[data-icon="javascript"] .heroSkillIcon { color: #c9a800; }
+.heroSkillItem[data-icon="python"] .heroSkillIcon { color: #3776ab; }
+.heroSkillItem[data-icon="html"] .heroSkillIcon { color: #e34f26; }
+.heroSkillItem[data-icon="css"] .heroSkillIcon { color: #264de4; }
+.heroSkillItem[data-icon="photoshop"] .heroSkillIcon { color: #31a8ff; }
+.heroSkillItem[data-icon="cinema4d"] .heroSkillIcon { color: #9b51e0; }
+.heroSkillItem[data-icon="figma"] .heroSkillIcon { color: #a259ff; }
 
 @media (prefers-color-scheme: dark) {
   .heroSkillItem {
-    border-color: rgba(255, 255, 255, 0.1);
-    background: rgba(255, 255, 255, 0.04);
+    color: #a1a1a1;
+  }
+
+  .heroSkillItem:hover,
+  .heroSkillItem:focus-visible {
     color: #e5e5e5;
   }
 
-  .heroSkillIcon {
-    color: rgba(255, 255, 255, 0.42);
-    opacity: 0.5;
-  }
-
-  .heroSkillItem[data-icon="typescript"] {
-    border-color: rgba(49, 120, 198, 0.4);
-    background: rgba(49, 120, 198, 0.16);
-  }
-
-  .heroSkillItem[data-icon="javascript"] {
-    border-color: rgba(247, 223, 30, 0.38);
-    background: rgba(247, 223, 30, 0.14);
-  }
-
-  .heroSkillItem[data-icon="python"] {
-    border-color: rgba(55, 118, 171, 0.4);
-    background: rgba(55, 118, 171, 0.18);
-  }
-
-  .heroSkillItem[data-icon="html"] {
-    border-color: rgba(255, 109, 58, 0.38);
-    background: rgba(255, 109, 58, 0.16);
-  }
-
-  .heroSkillItem[data-icon="css"] {
-    border-color: rgba(56, 123, 255, 0.36);
-    background: rgba(56, 123, 255, 0.16);
-  }
-
-  .heroSkillItem[data-icon="photoshop"] {
-    border-color: rgba(49, 168, 255, 0.38);
-    background: rgba(49, 168, 255, 0.16);
-  }
-
-  .heroSkillItem[data-icon="cinema4d"] {
-    border-color: rgba(155, 81, 224, 0.36);
-    background: rgba(155, 81, 224, 0.16);
-  }
-
-  .heroSkillItem[data-icon="figma"] {
-    border-color: rgba(162, 89, 255, 0.36);
-    background: rgba(162, 89, 255, 0.16);
-  }
+  .heroSkillItem[data-icon="javascript"] .heroSkillIcon { color: #f7df1e; }
 }
 
 @media (max-width: 640px) {
   .heroSkills {
     margin-top: 1.5rem;
+    gap: 0.35rem 1.25rem;
   }
 }
 

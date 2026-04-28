@@ -40,8 +40,8 @@ export default function Home() {
               </span>
             </h1>
             <p className={styles.heroSubtitle}>
-              Industrial Engineering student at KU Leuven<br></br>
-              Who likes to code from time to time.
+              Industrial Engineering student at KU Leuven.<br></br>
+              I build apps and tools on the side.
             </p>
 
             <div className={styles.heroSkills} aria-label="Skills">

@@ -1,10 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { Fragment, useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import styles from "../../styles/pages/home.module.css";
 import type { Project } from "../content/projects";
-import GithubStarsButton from "./GithubStarsButton";
 import ModalCarousel from "./ModalCarousel";
 
 function formatStack(stack?: Project["stack"]) {
@@ -97,21 +96,6 @@ function renderParagraphText(text: string) {
   return nodes;
 }
 
-function getGitHubRepoFromHref(href: string) {
-  try {
-    const url = new URL(href);
-    const hostname = url.hostname.replace(/^www\./, "");
-    if (hostname !== "github.com") return null;
-
-    const [owner, repo] = url.pathname.split("/").filter(Boolean);
-    if (!owner || !repo) return null;
-
-    const normalizedRepo = repo.replace(/\.git$/, "");
-    return `${owner}/${normalizedRepo}`;
-  } catch {
-    return null;
-  }
-}
 
 export default function ProjectCards({
   projects,
@@ -504,37 +488,28 @@ export default function ProjectCards({
 
                   return (
                     <div className={styles.modalLinks}>
-                      {links.map((link) => {
-                        const linkGithubRepo = getGitHubRepoFromHref(link.href);
-
-                        return (
-                          <Fragment key={`${link.href}-${link.label}`}>
-                            <a
-                              className={styles.modalLink}
-                              href={link.href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {link.label}
-                              <svg
-                                className={styles.externalIcon}
-                                viewBox="0 0 24 24"
-                                aria-hidden="true"
-                                focusable="false"
-                              >
-                                <path
-                                  fill="currentColor"
-                                  d="M14 3h7v7h-2V6.4l-9.3 9.3-1.4-1.4L17.6 5H14V3ZM5 5h6v2H7v10h10v-4h2v6H5V5Z"
-                                />
-                              </svg>
-                            </a>
-
-                            {linkGithubRepo ? (
-                              <GithubStarsButton repo={linkGithubRepo} />
-                            ) : null}
-                          </Fragment>
-                        );
-                      })}
+                      {links.map((link) => (
+                        <a
+                          key={`${link.href}-${link.label}`}
+                          className={styles.modalLink}
+                          href={link.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {link.label}
+                          <svg
+                            className={styles.externalIcon}
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                            focusable="false"
+                          >
+                            <path
+                              fill="currentColor"
+                              d="M14 3h7v7h-2V6.4l-9.3 9.3-1.4-1.4L17.6 5H14V3ZM5 5h6v2H7v10h10v-4h2v6H5V5Z"
+                            />
+                          </svg>
+                        </a>
+                      ))}
                     </div>
                   );
                 })()}
