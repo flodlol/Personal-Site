@@ -41,16 +41,24 @@ export default function ContactSection() {
   }, []);
 
   return (
-    <section className={styles.section} aria-labelledby="contact">
-      <h2 className={styles.sectionTitle} id="contact">
-        Contact
-      </h2>
-      <p className={styles.sectionText}>
-        Want to reach out? Email works best, but I’m also on Discord and GitHub.
-      </p>
+    <section
+      className={`${styles.section} ${styles.contactSection}`}
+      aria-labelledby="contact"
+    >
+      <div className={styles.sectionHeading}>
+        <div>
+          <h2 className={styles.sectionTitle} id="contact">
+            Get in touch
+          </h2>
+          <p className={styles.sectionText}>The easiest ways to reach me.</p>
+        </div>
+      </div>
 
       <div className={styles.contactGrid}>
-        <a className={styles.contactItem} href="mailto:jonas.meuleman@icloud.com">
+        <a
+          className={styles.contactItem}
+          href="mailto:jonas.meuleman@icloud.com"
+        >
           <span className={styles.contactIconWrap} aria-hidden="true">
             <svg
               className={styles.contactIconStroke}
@@ -66,8 +74,29 @@ export default function ContactSection() {
             </svg>
           </span>
           <div className={styles.contactText}>
-            <div className={styles.contactLabel}>Email</div>
+            <div className={styles.contactLabel}>Personal email</div>
             <div className={styles.contactValue}>jonas.meuleman@icloud.com</div>
+          </div>
+        </a>
+
+        <a className={styles.contactItem} href="mailto:jonas@study-track.app">
+          <span className={styles.contactIconWrap} aria-hidden="true">
+            <svg
+              className={styles.contactIconStroke}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <rect x="3" y="5" width="18" height="14" rx="3" />
+              <path d="m3 7 9 6 9-6" />
+            </svg>
+          </span>
+          <div className={styles.contactText}>
+            <div className={styles.contactLabel}>Work email</div>
+            <div className={styles.contactValue}>jonas@study-track.app</div>
           </div>
         </a>
 

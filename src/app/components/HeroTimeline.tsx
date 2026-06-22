@@ -6,7 +6,11 @@ import styles from "../../styles/pages/home.module.css";
 import type { SkillTimelineItem } from "../content/skill-timeline";
 import SkillLogo from "./SkillLogo";
 
-export default function HeroTimeline({ items }: { items: SkillTimelineItem[] }) {
+export default function HeroTimeline({
+  items,
+}: {
+  items: SkillTimelineItem[];
+}) {
   const rootRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -113,7 +117,10 @@ export default function HeroTimeline({ items }: { items: SkillTimelineItem[] }) 
                       height={item.dotImage.height}
                     />
                   ) : item.dotIcons?.length ? (
-                    <span className={styles.timelineDotIcons} aria-hidden="true">
+                    <span
+                      className={styles.timelineDotIcons}
+                      aria-hidden="true"
+                    >
                       {item.dotIcons.map((icon) => (
                         <span key={icon} data-icon={icon}>
                           <SkillLogo
@@ -151,7 +158,7 @@ export default function HeroTimeline({ items }: { items: SkillTimelineItem[] }) 
           );
         })}
         <li className={styles.timelineEnd} aria-hidden="true">
-          more to learn, more to do ... 
+          more to learn, more to do ...
         </li>
       </ol>
     </div>

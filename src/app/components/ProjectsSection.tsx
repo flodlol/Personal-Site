@@ -8,9 +8,14 @@ export default function ProjectsSection() {
       className={`${styles.section} ${styles.currentProjects}`}
       aria-labelledby="current-projects"
     >
-      <h2 className={styles.sectionTitle} id="current-projects">
-        Projects I&apos;m working on
-      </h2>
+      <div className={styles.sectionHeading}>
+        <div>
+          <h2 className={styles.sectionTitle} id="current-projects">
+            Selected work
+          </h2>
+          <p className={styles.sectionText}>Things I&apos;m working on now.</p>
+        </div>
+      </div>
       <ProjectCards projects={currentProjects} />
     </section>
   );

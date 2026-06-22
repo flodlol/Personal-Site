@@ -96,14 +96,7 @@ function renderParagraphText(text: string) {
   return nodes;
 }
 
-
-export default function ProjectCards({
-  projects,
-  variant = "default",
-}: {
-  projects: Project[];
-  variant?: "default" | "design";
-}) {
+export default function ProjectCards({ projects }: { projects: Project[] }) {
   const [openProjectId, setOpenProjectId] = useState<string | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const modalTitleId = useId();
@@ -131,7 +124,7 @@ export default function ProjectCards({
   const closeModal = () => setOpenProjectId(null);
 
   const openProject = openProjectId
-    ? projects.find((p) => p.id === openProjectId) ?? null
+    ? (projects.find((p) => p.id === openProjectId) ?? null)
     : null;
   const openProjectModal = openProject?.modal ?? null;
   const openProjectStack = openProject ? formatStack(openProject.stack) : null;
@@ -139,65 +132,10 @@ export default function ProjectCards({
   return (
     <>
       <div className={styles.projects}>
-        {projects.map((project) => {
+        {projects.map((project, projectIndex) => {
           const isClickable = Boolean(project.modal);
           const stack = formatStack(project.stack);
           const primaryLink = project.link ?? project.links?.[0] ?? null;
-
-          if (variant === "design") {
-            const thumbnail = project.thumbnail ?? project.logo ?? null;
-
-            return (
-              <article
-                key={project.id}
-                className={styles.projectCardDesign}
-                role={isClickable ? "button" : undefined}
-                tabIndex={isClickable ? 0 : undefined}
-                onClick={isClickable ? () => openModal(project.id) : undefined}
-                onKeyDown={
-                  isClickable
-                    ? (event) => {
-                        if (event.key === "Enter" || event.key === " ") {
-                          event.preventDefault();
-                          openModal(project.id);
-                        }
-                      }
-                    : undefined
-                }
-                aria-label={
-                  isClickable ? `Open ${project.title} details` : undefined
-                }
-              >
-                {thumbnail ? (
-                  <Image
-                    className={styles.projectThumbnail}
-                    src={thumbnail.src}
-                    alt={thumbnail.alt}
-                    width={thumbnail.width}
-                    height={thumbnail.height}
-                    sizes="(max-width: 768px) 100vw, 500px"
-                  />
-                ) : (
-                  <div className={styles.projectThumbnailPlaceholder} />
-                )}
-                <div className={styles.projectDesignInfo}>
-                  <h3 className={styles.projectDesignTitle}>{project.title}</h3>
-                  {project.period || stack ? (
-                    <div className={styles.projectDesignMeta}>
-                      {project.period ? (
-                        <span className={styles.projectDesignDate}>
-                          {project.period}
-                        </span>
-                      ) : null}
-                      {stack ? (
-                        <span className={styles.projectDesignStack}>{stack}</span>
-                      ) : null}
-                    </div>
-                  ) : null}
-                </div>
-              </article>
-            );
-          }
 
           return (
             <article
@@ -216,8 +154,13 @@ export default function ProjectCards({
                     }
                   : undefined
               }
-              aria-label={isClickable ? `Open ${project.title} details` : undefined}
+              aria-label={
+                isClickable ? `Open ${project.title} details` : undefined
+              }
             >
+              <span className={styles.projectIndex} aria-hidden="true">
+                {String(projectIndex + 1).padStart(2, "0")}
+              </span>
               <div className={styles.projectCardMain}>
                 <h3 className={styles.projectTitle}>{project.title}</h3>
                 {project.period || stack ? (
@@ -228,13 +171,13 @@ export default function ProjectCards({
                       </span>
                     ) : null}
                     {stack ? (
-                      <span className={styles.projectMetaStack}>
-                        {stack}
-                      </span>
+                      <span className={styles.projectMetaStack}>{stack}</span>
                     ) : null}
                   </div>
                 ) : null}
-                <p className={styles.projectDescription}>{project.description}</p>
+                <p className={styles.projectDescription}>
+                  {project.description}
+                </p>
                 {primaryLink ? (
                   <a
                     className={styles.projectLink}
@@ -243,7 +186,7 @@ export default function ProjectCards({
                     rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    {primaryLink.label}
+                    {primaryLink.label} <span aria-hidden="true">&#8599;</span>
                   </a>
                 ) : null}
               </div>
@@ -330,11 +273,11 @@ export default function ProjectCards({
                 {(() => {
                   const baseBlocks =
                     openProjectModal.content ??
-                    (openProjectModal.paragraphs?.map((text) => ({
+                    openProjectModal.paragraphs?.map((text) => ({
                       type: "paragraph" as const,
                       text,
                     })) ??
-                      []);
+                    [];
 
                   const blocks =
                     openProjectModal.content || !openProjectModal.screenshot
@@ -435,7 +378,11 @@ export default function ProjectCards({
 
                     if (block.type === "carousel") {
                       return (
-                        <ModalCarousel key={index} label={block.label} images={block.images} />
+                        <ModalCarousel
+                          key={index}
+                          label={block.label}
+                          images={block.images}
+                        />
                       );
                     }
 
@@ -482,7 +429,8 @@ export default function ProjectCards({
               <div className={styles.modalFooterInner}>
                 {(() => {
                   const links =
-                    openProject.links ?? (openProject.link ? [openProject.link] : []);
+                    openProject.links ??
+                    (openProject.link ? [openProject.link] : []);
 
                   if (links.length === 0) return null;
 

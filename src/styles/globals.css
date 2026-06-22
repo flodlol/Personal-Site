@@ -5,22 +5,50 @@
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --paper: #080808;
+  --surface: #0d0d0e;
+  --surface-raised: #121214;
+  --ink: #f2f2f0;
+  --muted: #88888c;
+  --signal: #9dacff;
+  --line: rgba(255, 255, 255, 0.12);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background:
+    radial-gradient(
+      circle at 12% 8%,
+      rgba(104, 116, 190, 0.1),
+      transparent 28rem
+    ),
+    radial-gradient(
+      circle at 88% 42%,
+      rgba(70, 89, 150, 0.07),
+      transparent 32rem
+    ),
+    var(--paper);
+  background-attachment: fixed;
+  color: var(--ink);
   font-family: Arial, Helvetica, sans-serif;
-  line-height: 1.6;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
 }
 
 a {
@@ -28,3 +56,13 @@ a {
   text-decoration: none;
 }
 
+::selection {
+  color: #080808;
+  background: var(--signal);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

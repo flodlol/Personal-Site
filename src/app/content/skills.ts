@@ -22,21 +22,13 @@ export type SkillGroup = {
 
 export const heroSkills: SkillGroup[] = [
   {
-    label: "Languages",
+    label: "Working with",
     items: [
       { label: "TypeScript", icon: "typescript" },
       { label: "JavaScript", icon: "javascript" },
       { label: "Python", icon: "python" },
       { label: "HTML", icon: "html" },
       { label: "CSS", icon: "css" },
-    ],
-  },
-  {
-    label: "Apps",
-    items: [
-      { label: "Photoshop", icon: "photoshop" },
-      { label: "Cinema 4D", icon: "cinema4d" },
-      { label: "Figma", icon: "figma" },
     ],
   },
 ];

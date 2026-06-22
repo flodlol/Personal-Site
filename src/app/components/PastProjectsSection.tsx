@@ -1,21 +1,21 @@
 import styles from "../../styles/pages/home.module.css";
-import {
-  designProjects,
-  pastProjects,
-  smallerPythonProjects,
-} from "../content/projects";
+import { pastProjects, smallerPythonProjects } from "../content/projects";
 import ProjectCards from "./ProjectCards";
 import SkillLogo from "./SkillLogo";
 
 export default function PastProjectsSection() {
   return (
     <section className={styles.section} aria-labelledby="past-projects">
-      <h2 className={styles.sectionTitle} id="past-projects">
-        Past / Other projects
-      </h2>
-      <p className={styles.sectionText}>
-        A few older things I&apos;ve built and learned from.
-      </p>
+      <div className={styles.sectionHeading}>
+        <div>
+          <h2 className={styles.sectionTitle} id="past-projects">
+            Past projects
+          </h2>
+          <p className={styles.sectionText}>
+            Older apps and smaller experiments.
+          </p>
+        </div>
+      </div>
 
       <ProjectCards projects={pastProjects} />
 
@@ -52,11 +52,6 @@ export default function PastProjectsSection() {
           <ProjectCards projects={smallerPythonProjects} />
         </div>
       </details>
-
-      <div className={styles.pastDesign}>
-        <h3 className={styles.subsectionTitle}>Design</h3>
-        <ProjectCards projects={designProjects} variant="design" />
-      </div>
     </section>
   );
 }

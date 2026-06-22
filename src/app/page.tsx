@@ -6,8 +6,8 @@ import ContactSection from "./components/ContactSection";
 import { heroSkills } from "./content/skills";
 import { heroSkillTimeline } from "./content/skill-timeline";
 import SkillLogo from "./components/SkillLogo";
-import TypingName from "./components/TypingName";
 import HeroTimeline from "./components/HeroTimeline";
+import TypingName from "./components/TypingName";
 
 export default function Home() {
   const year = new Date().getFullYear();
@@ -15,6 +15,22 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
+        <a
+          className={styles.brand}
+          href="#top"
+          aria-label="flodlol, back to top"
+        >
+          <span className={styles.brandLogoFrame} aria-hidden="true">
+            <Image
+              className={styles.brandLogo}
+              src="/flod-banner.png"
+              alt=""
+              width={4338}
+              height={4050}
+              priority
+            />
+          </span>
+        </a>
         <nav className={styles.nav} aria-label="Primary">
           <a href="#current-projects">Projects</a>
           <a href="#timeline">Timeline</a>
@@ -23,44 +39,55 @@ export default function Home() {
       </header>
 
       <main className={styles.main}>
-        <section className={styles.hero}>
+        <section className={styles.hero} id="top">
           <div className={styles.heroContent}>
             <h1 className={styles.heroTitle}>
-              <span className={styles.heroTitleInner}>
-                <span className={styles.heroWave} aria-hidden="true">
-                  👋
-                </span>{" "}
-                Hello, I’m{" "}
-                <TypingName
-                  words={["Jonas", "flodlol"]}
-                  typingMs={200}
-                  deletingMs={140}
-                  pauseMs={1800}
-                />
-              </span>
+              Hi, I&apos;m{" "}
+              <TypingName
+                words={["Jonas", "flodlol"]}
+                typingMs={200}
+                deletingMs={140}
+                pauseMs={1800}
+              />
             </h1>
+
             <p className={styles.heroSubtitle}>
-              Industrial Engineering student at KU Leuven.<br></br>
-              I build apps and tools on the side.
+              Industrial Engineering student at KU Leuven.
+              <br />I build apps and tools on the side.
             </p>
+
+            <div className={styles.heroActions}>
+              <a className={styles.heroPrimaryAction} href="#current-projects">
+                Browse projects
+              </a>
+              <a
+                className={styles.heroSecondaryAction}
+                href="https://github.com/flodlol"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                GitHub <span aria-hidden="true">&#8599;</span>
+              </a>
+            </div>
 
             <div className={styles.heroSkills} aria-label="Skills">
               {heroSkills.map((group) => (
-                <ul key={group.label} className={styles.heroSkillList}>
-                  {group.items.map((item) => (
-                    <li
-                      key={item.label}
-                      className={styles.heroSkillItem}
-                      data-icon={item.icon}
-                    >
-                      <SkillLogo
-                        icon={item.icon}
-                        className={styles.heroSkillIcon}
-                      />
-                      <span className={styles.heroSkillText}>{item.label}</span>
-                    </li>
-                  ))}
-                </ul>
+                <div key={group.label} className={styles.heroSkillGroup}>
+                  <span className={styles.heroSkillLabel}>{group.label}</span>
+                  <ul className={styles.heroSkillList}>
+                    {group.items.map((item) => (
+                      <li key={item.label} className={styles.heroSkillItem}>
+                        <SkillLogo
+                          icon={item.icon}
+                          className={styles.heroSkillIcon}
+                        />
+                        <span className={styles.heroSkillText}>
+                          {item.label}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ))}
             </div>
           </div>
@@ -70,12 +97,16 @@ export default function Home() {
         <PastProjectsSection />
 
         <section className={styles.section} aria-labelledby="timeline">
-          <h2 className={styles.sectionTitle} id="timeline">
-            Timeline
-          </h2>
-          <p className={styles.sectionText}>
-            A quick overview of how I got into building things.
-          </p>
+          <div className={styles.sectionHeading}>
+            <div>
+              <h2 className={styles.sectionTitle} id="timeline">
+                How I got here
+              </h2>
+              <p className={styles.sectionText}>
+                A short history of learning by building.
+              </p>
+            </div>
+          </div>
           <HeroTimeline items={heroSkillTimeline} />
         </section>
 
@@ -93,7 +124,9 @@ export default function Home() {
               height={28}
             />
             <div className={styles.footerLeftText}>
-              <span className={styles.footerText}>Powered by Calypso Inc.</span>
+              <span className={styles.footerText}>
+                A Calypso Inc. production.
+              </span>
               <span className={styles.footerText}>
                 © {year} Jonas. All rights reserved.
               </span>
