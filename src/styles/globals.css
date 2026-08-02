@@ -49,8 +49,24 @@ a {
   background: var(--signal);
 }
 
+::view-transition-group(project-detail) {
+  z-index: 1001;
+  animation-duration: 620ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+::view-transition-old(project-detail),
+::view-transition-new(project-detail) {
+  overflow: hidden;
+  mix-blend-mode: normal;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  ::view-transition-group(project-detail) {
+    animation-duration: 1ms;
   }
 }

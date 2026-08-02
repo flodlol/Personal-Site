@@ -1,14 +1,47 @@
 "use client";
 
+import { ArrowUpRight, X } from "@phosphor-icons/react";
 import Image from "next/image";
-import { useEffect, useId, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
+import { flushSync } from "react-dom";
 import styles from "../../styles/pages/home.module.css";
 import type { Project } from "../content/projects";
-import ModalCarousel from "./ModalCarousel";
+
+type NativeViewTransition = {
+  finished: Promise<unknown>;
+};
+
+type TransitionDocument = {
+  startViewTransition?: (update: () => void) => NativeViewTransition;
+};
+
+const FOCUSABLE_SELECTOR = [
+  "a[href]",
+  "button:not([disabled])",
+  "input:not([disabled])",
+  "select:not([disabled])",
+  "textarea:not([disabled])",
+  "[tabindex]:not([tabindex='-1'])",
+].join(",");
 
 function formatStack(stack?: Project["stack"]) {
   if (!stack) return null;
-  return Array.isArray(stack) ? stack.join(" · ") : stack;
+  return Array.isArray(stack) ? stack.join(" + ") : stack;
+}
+
+function formatLinkDomain(link: { href: string; label: string }) {
+  try {
+    const hostname = new URL(link.href).hostname.replace(/^www\./, "");
+    return hostname === "github.com" ? "GitHub" : hostname;
+  } catch {
+    return link.label;
+  }
 }
 
 function isSafeLinkHref(href: string) {
@@ -22,8 +55,12 @@ function isSafeLinkHref(href: string) {
   }
 }
 
-function isGifImage(src: string) {
-  return src.toLowerCase().endsWith(".gif");
+function shouldUseNativeTransition() {
+  const transitionDocument = document as unknown as TransitionDocument;
+  return Boolean(
+    transitionDocument.startViewTransition &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
 }
 
 function renderParagraphText(text: string) {
@@ -98,8 +135,107 @@ function renderParagraphText(text: string) {
 
 export default function ProjectCards({ projects }: { projects: Project[] }) {
   const [openProjectId, setOpenProjectId] = useState<string | null>(null);
+  const [usesNativeTransition, setUsesNativeTransition] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  const projectCardRefs = useRef(new Map<string, HTMLElement>());
+  const transitionRunningRef = useRef(false);
   const modalTitleId = useId();
+
+  const finishTransition = useCallback((card?: HTMLElement | null) => {
+    card?.style.removeProperty("view-transition-name");
+    document.documentElement.removeAttribute("data-project-transition");
+    transitionRunningRef.current = false;
+  }, []);
+
+  const openModal = useCallback(
+    (projectId: string, card: HTMLElement) => {
+      if (transitionRunningRef.current) return;
+
+      if (!shouldUseNativeTransition()) {
+        setUsesNativeTransition(false);
+        setOpenProjectId(projectId);
+        return;
+      }
+
+      const transitionDocument = document as unknown as TransitionDocument;
+      const startViewTransition =
+        transitionDocument.startViewTransition?.bind(transitionDocument);
+
+      if (!startViewTransition) {
+        setOpenProjectId(projectId);
+        return;
+      }
+
+      transitionRunningRef.current = true;
+      document.documentElement.setAttribute("data-project-transition", "open");
+      card.style.setProperty("view-transition-name", "project-detail");
+
+      try {
+        const transition = startViewTransition(() => {
+          card.style.setProperty("view-transition-name", "none");
+          flushSync(() => {
+            setUsesNativeTransition(true);
+            setOpenProjectId(projectId);
+          });
+        });
+
+        transition.finished.finally(() => finishTransition(card));
+      } catch {
+        finishTransition(card);
+        setUsesNativeTransition(false);
+        setOpenProjectId(projectId);
+      }
+    },
+    [finishTransition],
+  );
+
+  const closeModal = useCallback(() => {
+    if (!openProjectId || transitionRunningRef.current) return;
+
+    const card = projectCardRefs.current.get(openProjectId) ?? null;
+
+    if (!shouldUseNativeTransition()) {
+      setOpenProjectId(null);
+      setUsesNativeTransition(false);
+      window.requestAnimationFrame(() => card?.focus());
+      return;
+    }
+
+    const transitionDocument = document as unknown as TransitionDocument;
+    const startViewTransition =
+      transitionDocument.startViewTransition?.bind(transitionDocument);
+
+    if (!startViewTransition) {
+      setOpenProjectId(null);
+      setUsesNativeTransition(false);
+      window.requestAnimationFrame(() => card?.focus());
+      return;
+    }
+
+    transitionRunningRef.current = true;
+    document.documentElement.setAttribute("data-project-transition", "close");
+
+    try {
+      const transition = startViewTransition(() => {
+        flushSync(() => {
+          setOpenProjectId(null);
+          setUsesNativeTransition(false);
+        });
+        card?.style.setProperty("view-transition-name", "project-detail");
+      });
+
+      transition.finished.finally(() => {
+        finishTransition(card);
+        card?.focus();
+      });
+    } catch {
+      finishTransition(card);
+      setOpenProjectId(null);
+      setUsesNativeTransition(false);
+      window.requestAnimationFrame(() => card?.focus());
+    }
+  }, [finishTransition, openProjectId]);
 
   useEffect(() => {
     if (!openProjectId) return;
@@ -108,7 +244,30 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
     document.body.style.overflow = "hidden";
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpenProjectId(null);
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeModal();
+        return;
+      }
+
+      if (event.key !== "Tab" || !modalRef.current) return;
+
+      const focusable = Array.from(
+        modalRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
+      ).filter((element) => !element.hasAttribute("disabled"));
+
+      if (!focusable.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
 
     window.addEventListener("keydown", onKeyDown);
@@ -118,16 +277,18 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [openProjectId]);
-
-  const openModal = (projectId: string) => setOpenProjectId(projectId);
-  const closeModal = () => setOpenProjectId(null);
+  }, [closeModal, openProjectId]);
 
   const openProject = openProjectId
-    ? (projects.find((p) => p.id === openProjectId) ?? null)
+    ? (projects.find((project) => project.id === openProjectId) ?? null)
     : null;
   const openProjectModal = openProject?.modal ?? null;
   const openProjectStack = openProject ? formatStack(openProject.stack) : null;
+  const openProjectIsActive = Boolean(
+    openProject?.period && /\bnow\b/i.test(openProject.period),
+  );
+  const openProjectLinks =
+    openProject?.links ?? (openProject?.link ? [openProject.link] : []);
 
   return (
     <>
@@ -140,20 +301,29 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
           return (
             <article
               key={project.id}
+              ref={(node) => {
+                if (node) projectCardRefs.current.set(project.id, node);
+                else projectCardRefs.current.delete(project.id);
+              }}
               className={styles.projectCard}
               role={isClickable ? "button" : undefined}
               tabIndex={isClickable ? 0 : undefined}
-              onClick={isClickable ? () => openModal(project.id) : undefined}
+              onClick={
+                isClickable
+                  ? (event) => openModal(project.id, event.currentTarget)
+                  : undefined
+              }
               onKeyDown={
                 isClickable
                   ? (event) => {
                       if (event.key === "Enter" || event.key === " ") {
                         event.preventDefault();
-                        openModal(project.id);
+                        openModal(project.id, event.currentTarget);
                       }
                     }
                   : undefined
               }
+              aria-haspopup={isClickable ? "dialog" : undefined}
               aria-label={
                 isClickable ? `Open ${project.title} details` : undefined
               }
@@ -161,6 +331,14 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
               <span className={styles.projectIndex} aria-hidden="true">
                 {String(projectIndex + 1).padStart(2, "0")}
               </span>
+
+              {isClickable ? (
+                <span className={styles.projectOpenHint} aria-hidden="true">
+                  <span>Take a look</span>
+                  <ArrowUpRight size={15} weight="regular" />
+                </span>
+              ) : null}
+
               <div className={styles.projectCardMain}>
                 <h3 className={styles.projectTitle}>{project.title}</h3>
                 {project.period || stack ? (
@@ -184,9 +362,10 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
                     href={primaryLink.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={(event) => event.stopPropagation()}
                   >
-                    {primaryLink.label} <span aria-hidden="true">&#8599;</span>
+                    {primaryLink.label}
+                    <ArrowUpRight size={13} weight="regular" aria-hidden="true" />
                   </a>
                 ) : null}
               </div>
@@ -211,98 +390,105 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
       {openProject && openProjectModal ? (
         <div
           className={styles.modalOverlay}
-          onMouseDown={(e) => {
-            if (e.target === e.currentTarget) closeModal();
+          data-native-transition={usesNativeTransition ? "true" : undefined}
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) closeModal();
           }}
         >
           <div
+            ref={modalRef}
             className={styles.modal}
+            data-native-transition={usesNativeTransition ? "true" : undefined}
             role="dialog"
             aria-modal="true"
             aria-labelledby={modalTitleId}
+            style={{ viewTransitionName: "project-detail" }}
           >
-            <div className={styles.modalHeader}>
+            <header className={styles.modalHeader}>
               <div className={styles.modalHeaderInner}>
                 <div className={styles.modalHeaderMain}>
+                  <span className={styles.modalHeaderTitle}>
+                    {openProject.title}
+                  </span>
+                </div>
+
+                <div className={styles.modalHeaderActions}>
+                  {openProjectLinks.slice(0, 1).map((link) => (
+                    <a
+                      key={`${link.href}-${link.label}`}
+                      className={styles.modalHeaderLink}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {formatLinkDomain(link)}
+                      <ArrowUpRight
+                        size={14}
+                        weight="regular"
+                        aria-hidden="true"
+                      />
+                    </a>
+                  ))}
+
+                  <button
+                    ref={closeButtonRef}
+                    type="button"
+                    className={styles.modalClose}
+                    onClick={closeModal}
+                    aria-label="Close project"
+                  >
+                    <X size={18} weight="regular" aria-hidden="true" />
+                  </button>
+                </div>
+              </div>
+            </header>
+
+            <div className={styles.modalBody}>
+              <section className={styles.modalIntro}>
+                <div className={styles.modalIntroTitleRow}>
                   {openProject.logo && openProject.showLogoInModal !== false ? (
                     <Image
                       className={styles.modalLogo}
                       src={openProject.logo.src}
                       alt=""
-                      width={96}
-                      height={96}
+                      width={144}
+                      height={144}
                       aria-hidden="true"
                     />
                   ) : null}
-
-                  <div>
-                    <h3 className={styles.modalTitle} id={modalTitleId}>
-                      {openProject.title}
-                    </h3>
-                    {openProject.period || openProjectStack ? (
-                      <div className={styles.modalMeta}>
-                        {openProject.period ? (
-                          <span className={styles.modalDate}>
-                            {openProject.period}
-                          </span>
-                        ) : null}
-                        {openProjectStack ? (
-                          <span className={styles.modalStack}>
-                            {openProjectStack}
-                          </span>
-                        ) : null}
-                      </div>
-                    ) : null}
-                  </div>
+                  <h3 className={styles.modalTitle} id={modalTitleId}>
+                    {openProject.title}
+                  </h3>
                 </div>
 
-                <button
-                  ref={closeButtonRef}
-                  type="button"
-                  className={styles.modalClose}
-                  onClick={closeModal}
-                  aria-label="Close"
-                >
-                  ×
-                </button>
-              </div>
-            </div>
+                <p className={styles.modalDeck}>{openProject.description}</p>
 
-            <div className={styles.modalBody}>
-              <div className={styles.modalBodyInner}>
+                {openProject.period || openProjectStack ? (
+                  <div className={styles.modalMeta}>
+                    {openProject.period ? (
+                      <span className={styles.modalDate}>
+                        {openProject.period}
+                      </span>
+                    ) : null}
+                    {openProjectStack ? (
+                      <span className={styles.modalStack}>
+                        {openProjectStack}
+                      </span>
+                    ) : null}
+                  </div>
+                ) : null}
+              </section>
+
+              <div className={styles.modalStory}>
+                <div className={styles.modalBodyInner}>
                 {(() => {
-                  const baseBlocks =
+                  const blocks =
                     openProjectModal.content ??
                     openProjectModal.paragraphs?.map((text) => ({
                       type: "paragraph" as const,
                       text,
                     })) ??
                     [];
-
-                  const blocks =
-                    openProjectModal.content || !openProjectModal.screenshot
-                      ? baseBlocks
-                      : (() => {
-                          const screenshotBlock = {
-                            type: "image" as const,
-                            ...openProjectModal.screenshot,
-                          };
-
-                          const firstParagraphIndex = baseBlocks.findIndex(
-                            (block) => block.type === "paragraph",
-                          );
-
-                          if (firstParagraphIndex === -1) {
-                            return [screenshotBlock, ...baseBlocks];
-                          }
-
-                          return [
-                            ...baseBlocks.slice(0, firstParagraphIndex + 1),
-                            screenshotBlock,
-                            ...baseBlocks.slice(firstParagraphIndex + 1),
-                          ];
-                        })();
-
                   const paragraphBlockIndexes = blocks.reduce<number[]>(
                     (acc, block, index) => {
                       if (block.type === "paragraph") acc.push(index);
@@ -310,14 +496,7 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
                     },
                     [],
                   );
-                  const leadParagraphIndex =
-                    paragraphBlockIndexes.length > 0
-                      ? paragraphBlockIndexes[0]
-                      : null;
-                  const mutedParagraphIndex =
-                    paragraphBlockIndexes.length > 0
-                      ? paragraphBlockIndexes[paragraphBlockIndexes.length - 1]
-                      : null;
+                  const leadParagraphIndex = paragraphBlockIndexes[0] ?? null;
 
                   return blocks.map((block, index) => {
                     if (block.type === "image") {
@@ -329,91 +508,15 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
                           alt={block.alt}
                           width={block.width}
                           height={block.height}
-                          unoptimized={isGifImage(block.src)}
-                          sizes="(max-width: 768px) 92vw, 720px"
+                          sizes="(max-width: 768px) 100vw, 850px"
                         />
-                      );
-                    }
-
-                    if (block.type === "imageRow") {
-                      return (
-                        <div key={index} className={styles.modalImageRow}>
-                          {block.images.map((image) => (
-                            <Image
-                              key={image.src}
-                              className={styles.modalScreenshot}
-                              src={image.src}
-                              alt={image.alt}
-                              width={image.width}
-                              height={image.height}
-                              unoptimized={isGifImage(image.src)}
-                              sizes="(max-width: 640px) 92vw, 340px"
-                            />
-                          ))}
-                        </div>
-                      );
-                    }
-
-                    if (block.type === "sectionTitle") {
-                      return (
-                        <h4 key={index} className={styles.modalSectionTitle}>
-                          {block.text}
-                        </h4>
-                      );
-                    }
-
-                    if (block.type === "list") {
-                      const ListTag = block.ordered ? "ol" : "ul";
-
-                      return (
-                        <ListTag key={index} className={styles.modalList}>
-                          {block.items.map((item, itemIndex) => (
-                            <li key={`${index}-${itemIndex}`}>
-                              {renderParagraphText(item)}
-                            </li>
-                          ))}
-                        </ListTag>
-                      );
-                    }
-
-                    if (block.type === "carousel") {
-                      return (
-                        <ModalCarousel
-                          key={index}
-                          label={block.label}
-                          images={block.images}
-                        />
-                      );
-                    }
-
-                    if (block.type === "embed") {
-                      return (
-                        <a
-                          key={index}
-                          className={styles.modalEmbed}
-                          href={block.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            className={styles.modalEmbedImage}
-                            src={block.imgSrc}
-                            alt={block.alt}
-                            width={block.width}
-                            height={block.height}
-                            loading="lazy"
-                          />
-                        </a>
                       );
                     }
 
                     const paragraphClassName =
                       index === leadParagraphIndex
                         ? styles.modalLead
-                        : index === mutedParagraphIndex
-                          ? styles.modalMuted
-                          : undefined;
+                        : undefined;
 
                     return (
                       <p key={index} className={paragraphClassName}>
@@ -422,46 +525,33 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
                     );
                   });
                 })()}
+                </div>
               </div>
-            </div>
 
-            <div className={styles.modalFooter}>
-              <div className={styles.modalFooterInner}>
-                {(() => {
-                  const links =
-                    openProject.links ??
-                    (openProject.link ? [openProject.link] : []);
-
-                  if (links.length === 0) return null;
-
-                  return (
-                    <div className={styles.modalLinks}>
-                      {links.map((link) => (
-                        <a
-                          key={`${link.href}-${link.label}`}
-                          className={styles.modalLink}
-                          href={link.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {link.label}
-                          <svg
-                            className={styles.externalIcon}
-                            viewBox="0 0 24 24"
-                            aria-hidden="true"
-                            focusable="false"
-                          >
-                            <path
-                              fill="currentColor"
-                              d="M14 3h7v7h-2V6.4l-9.3 9.3-1.4-1.4L17.6 5H14V3ZM5 5h6v2H7v10h10v-4h2v6H5V5Z"
-                            />
-                          </svg>
-                        </a>
-                      ))}
-                    </div>
-                  );
-                })()}
-              </div>
+              <footer className={styles.modalProjectFooter}>
+                <p>
+                  {openProjectIsActive
+                    ? "Want the version that actually exists today?"
+                    : "Want to poke around the actual thing?"}
+                </p>
+                <div className={styles.modalProjectLinks}>
+                  {openProjectLinks.map((link) => (
+                    <a
+                      key={`${link.href}-${link.label}-footer`}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {link.label}
+                      <ArrowUpRight
+                        size={15}
+                        weight="regular"
+                        aria-hidden="true"
+                      />
+                    </a>
+                  ))}
+                </div>
+              </footer>
             </div>
           </div>
         </div>
