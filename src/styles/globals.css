@@ -20,19 +20,7 @@ html {
 }
 
 body {
-  background:
-    radial-gradient(
-      circle at 12% 8%,
-      rgba(104, 116, 190, 0.1),
-      transparent 28rem
-    ),
-    radial-gradient(
-      circle at 88% 42%,
-      rgba(70, 89, 150, 0.07),
-      transparent 32rem
-    ),
-    var(--paper);
-  background-attachment: fixed;
+  background: var(--paper);
   color: var(--ink);
   font-family: Arial, Helvetica, sans-serif;
   line-height: 1.5;

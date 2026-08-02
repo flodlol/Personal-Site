@@ -41,33 +41,38 @@ export default function Home() {
       <main className={styles.main}>
         <section className={styles.hero} id="top">
           <div className={styles.heroContent}>
-            <h1 className={styles.heroTitle}>
-              Hi, I&apos;m{" "}
-              <TypingName
-                words={["Jonas", "flodlol"]}
-                typingMs={200}
-                deletingMs={140}
-                pauseMs={1800}
-              />
-            </h1>
+            <div className={styles.heroLayout}>
+              <div className={styles.heroCopy}>
+                <h1 className={styles.heroTitle}>
+                  Hi, I&apos;m{" "}
+                  <TypingName
+                    words={["Jonas", "flodlol"]}
+                    typingMs={200}
+                    deletingMs={140}
+                    pauseMs={1800}
+                  />
+                </h1>
 
-            <p className={styles.heroSubtitle}>
-              Industrial Engineering student at KU Leuven.
-              <br />I build apps and tools on the side.
-            </p>
+                <p className={styles.heroSubtitle}>
+                  Industrial Engineering student at KU Leuven.
+                  <br />I build apps and tools on the side.
+                </p>
 
-            <div className={styles.heroActions}>
-              <a className={styles.heroPrimaryAction} href="#current-projects">
-                Browse projects
-              </a>
-              <a
-                className={styles.heroSecondaryAction}
-                href="https://github.com/flodlol"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                GitHub <span aria-hidden="true">&#8599;</span>
-              </a>
+                <div className={styles.heroActions}>
+                  <a className={styles.heroPrimaryAction} href="#current-projects">
+                    Browse projects
+                  </a>
+                  <a
+                    className={styles.heroSecondaryAction}
+                    href="https://github.com/flodlol"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    GitHub <span aria-hidden="true">&#8599;</span>
+                  </a>
+                </div>
+              </div>
+
             </div>
 
             <div className={styles.heroSkills} aria-label="Skills">
@@ -96,9 +101,12 @@ export default function Home() {
         <ProjectsSection />
         <PastProjectsSection />
 
-        <section className={styles.section} aria-labelledby="timeline">
-          <div className={styles.sectionHeading}>
-            <div>
+        <section
+          className={`${styles.section} ${styles.timelineSection}`}
+          aria-labelledby="timeline"
+        >
+          <div className={styles.timelineLayout}>
+            <div className={`${styles.sectionHeading} ${styles.timelineHeading}`}>
               <h2 className={styles.sectionTitle} id="timeline">
                 How I got here
               </h2>
@@ -106,8 +114,8 @@ export default function Home() {
                 A short history of learning by building.
               </p>
             </div>
+            <HeroTimeline items={heroSkillTimeline} />
           </div>
-          <HeroTimeline items={heroSkillTimeline} />
         </section>
 
         <ContactSection />
