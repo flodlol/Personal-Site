@@ -3,6 +3,7 @@
 import { ArrowUpRight, X } from "@phosphor-icons/react";
 import Image from "next/image";
 import {
+  Fragment,
   useCallback,
   useEffect,
   useId,
@@ -378,6 +379,7 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
                     alt={project.logo.alt}
                     width={project.logo.width}
                     height={project.logo.height}
+                    data-dark-mark={project.logo.darkMark ? "true" : undefined}
                     sizes="(max-width: 768px) 200px, 240px"
                   />
                 </div>
@@ -453,6 +455,9 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
                       alt=""
                       width={144}
                       height={144}
+                      data-dark-mark={
+                        openProject.logo.darkMark ? "true" : undefined
+                      }
                       aria-hidden="true"
                     />
                   ) : null}
@@ -519,9 +524,29 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
                         : undefined;
 
                     return (
-                      <p key={index} className={paragraphClassName}>
-                        {renderParagraphText(block.text)}
-                      </p>
+                      <Fragment key={index}>
+                        {index === leadParagraphIndex
+                          ? openProjectLinks.slice(0, 1).map((link) => (
+                              <a
+                                key={`${link.href}-${link.label}-story`}
+                                className={styles.modalStoryLink}
+                                href={link.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {formatLinkDomain(link)}
+                                <ArrowUpRight
+                                  size={14}
+                                  weight="regular"
+                                  aria-hidden="true"
+                                />
+                              </a>
+                            ))
+                          : null}
+                        <p className={paragraphClassName}>
+                          {renderParagraphText(block.text)}
+                        </p>
+                      </Fragment>
                     );
                   });
                 })()}

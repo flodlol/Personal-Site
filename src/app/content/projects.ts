@@ -34,6 +34,7 @@ export type Project = {
     alt: string;
     width: number;
     height: number;
+    darkMark?: boolean;
   };
   showLogoOnCard?: boolean;
   showLogoInModal?: boolean;
@@ -103,6 +104,43 @@ export const currentProjects: Project[] = [
   },
 ];
 export const pastProjects: Project[] = [
+  {
+    id: "clowbie",
+    title: "Clowbie",
+    period: "August 2026",
+    stack: [
+      "Next.js",
+      "Plain CSS",
+      "Product handling",
+      "Shipping flow",
+      "Admin dashboard",
+    ],
+    description:
+      "A small site for my sister's 3D printing hobby, made so her prints have a proper little home online.",
+    link: {
+      href: "https://clowbie.netlify.app",
+      label: "Clowbie",
+    },
+    logo: {
+      src: "/clowbie-logo.svg",
+      alt: "Clowbie logo",
+      width: 2048,
+      height: 1720,
+      darkMark: true,
+    },
+    modal: {
+      content: [
+        {
+          type: "paragraph",
+          text: "Clowbie is a small website I made for my sister's 3D printing hobby. She had the fun part covered already: making prints, trying ideas, and turning plastic into little objects people actually want to look at. I wanted to give that work a clean place to live online instead of leaving it scattered in messages or photos.",
+        },
+        {
+          type: "paragraph",
+          text: "Even though it looks simple, it is a fully working site behind the scenes. It handles products, shipping details, and an admin dashboard, so she can manage the hobby without needing a pile of manual work around it. It is still intentionally personal, but it has the practical bits a real shop-like site needs.",
+        },
+      ],
+    },
+  },
   {
     id: "tag-timeline",
     title: "Tag-Timeline",

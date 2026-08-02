@@ -432,7 +432,7 @@
 .projectCard {
   position: relative;
   min-height: 14.5rem;
-  padding: 1.5rem;
+  padding: 1.5rem 2rem 1.5rem 1.5rem;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 7rem;
   gap: 1.5rem;
@@ -607,7 +607,7 @@
   min-height: 0;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
 }
 
 .projectLogo {
@@ -620,9 +620,18 @@
     filter 180ms ease;
 }
 
+.projectLogo[data-dark-mark="true"],
+.modalLogo[data-dark-mark="true"] {
+  filter: invert(1) saturate(0.82);
+}
+
 .projectCard:hover .projectLogo {
   transform: scale(1.04);
   filter: saturate(1);
+}
+
+.projectCard:hover .projectLogo[data-dark-mark="true"] {
+  filter: invert(1) saturate(1);
 }
 
 .pythonProjectsSection {
@@ -1562,8 +1571,8 @@
 }
 
 .modalIntro {
-  min-height: clamp(21rem, 55vh, 30rem);
-  padding: clamp(3.5rem, 8vw, 7rem) clamp(2rem, 7vw, 6rem);
+  min-height: clamp(17rem, 40vh, 22rem);
+  padding: clamp(3rem, 6vw, 5.5rem) clamp(2rem, 7vw, 6rem) clamp(2rem, 4vw, 3.25rem);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1587,6 +1596,35 @@
   font-weight: 570;
   line-height: 0.92;
   letter-spacing: -0.065em;
+}
+
+.modalStoryLink {
+  width: fit-content;
+  max-width: 100%;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #9dacff;
+  font-family: "Courier New", Courier, monospace;
+  font-size: clamp(0.98rem, 1.7vw, 1.25rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  text-transform: lowercase;
+  text-shadow: 0 0 1.25rem rgba(157, 172, 255, 0.18);
+  overflow-wrap: anywhere;
+  transition:
+    color 160ms ease,
+    opacity 160ms ease,
+    text-shadow 160ms ease;
+}
+
+.modalStoryLink:hover,
+.modalStoryLink:focus-visible {
+  color: #c7d0ff;
+  text-shadow: 0 0 1.6rem rgba(157, 172, 255, 0.34);
+  outline: none;
 }
 
 .modalDeck {
@@ -1750,7 +1788,7 @@
   }
 
   .modalIntro {
-    min-height: 27rem;
+    min-height: 21rem;
     padding-right: 2rem;
     padding-left: 2rem;
   }
@@ -1999,8 +2037,8 @@
   }
 
   .modalIntro {
-    min-height: 26rem;
-    padding: 3.5rem 1.2rem 3rem;
+    min-height: 19rem;
+    padding: 3rem 1.2rem 2.25rem;
   }
 
   .modalIntroTitleRow {
