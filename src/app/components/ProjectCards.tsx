@@ -16,6 +16,14 @@ import type { Project, ProjectModalContentBlock } from "../content/projects";
 
 type NativeViewTransition = {
   finished: Promise<unknown>;
+  ready?: Promise<unknown>;
+};
+
+type LightboxImage = {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
 };
 
 type TransitionDocument = {
@@ -137,11 +145,29 @@ function renderParagraphText(text: string) {
 export default function ProjectCards({ projects }: { projects: Project[] }) {
   const [openProjectId, setOpenProjectId] = useState<string | null>(null);
   const [usesNativeTransition, setUsesNativeTransition] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState<LightboxImage | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const modalRef = useRef<HTMLDivElement | null>(null);
   const projectCardRefs = useRef(new Map<string, HTMLElement>());
   const transitionRunningRef = useRef(false);
+  const lightboxTriggerRef = useRef<HTMLElement | null>(null);
+  const lightboxCloseRef = useRef<HTMLButtonElement | null>(null);
   const modalTitleId = useId();
+
+  const openLightbox = useCallback(
+    (image: LightboxImage, trigger: HTMLElement) => {
+      lightboxTriggerRef.current = trigger;
+      setLightboxImage(image);
+    },
+    [],
+  );
+
+  const closeLightbox = useCallback(() => {
+    const trigger = lightboxTriggerRef.current;
+    lightboxTriggerRef.current = null;
+    setLightboxImage(null);
+    window.requestAnimationFrame(() => trigger?.focus());
+  }, []);
 
   const finishTransition = useCallback((card?: HTMLElement | null) => {
     card?.style.removeProperty("view-transition-name");
@@ -181,7 +207,12 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
           });
         });
 
-        transition.finished.finally(() => finishTransition(card));
+        // A skipped transition rejects `ready`; ignore it so it is not
+        // reported as an unhandled rejection.
+        transition.ready?.catch(() => {});
+        transition.finished
+          .catch(() => {})
+          .finally(() => finishTransition(card));
       } catch {
         finishTransition(card);
         setUsesNativeTransition(false);
@@ -193,6 +224,9 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
 
   const closeModal = useCallback(() => {
     if (!openProjectId || transitionRunningRef.current) return;
+
+    lightboxTriggerRef.current = null;
+    setLightboxImage(null);
 
     const card = projectCardRefs.current.get(openProjectId) ?? null;
 
@@ -226,10 +260,13 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
         card?.style.setProperty("view-transition-name", "project-detail");
       });
 
-      transition.finished.finally(() => {
-        finishTransition(card);
-        card?.focus();
-      });
+      transition.ready?.catch(() => {});
+      transition.finished
+        .catch(() => {})
+        .finally(() => {
+          finishTransition(card);
+          card?.focus();
+        });
     } catch {
       finishTransition(card);
       setOpenProjectId(null);
@@ -245,6 +282,8 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
     document.body.style.overflow = "hidden";
 
     const onKeyDown = (event: KeyboardEvent) => {
+      if (lightboxImage) return;
+
       if (event.key === "Escape") {
         event.preventDefault();
         closeModal();
@@ -278,7 +317,29 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [closeModal, openProjectId]);
+  }, [closeModal, lightboxImage, openProjectId]);
+
+  useEffect(() => {
+    if (!lightboxImage) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeLightbox();
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+
+      event.preventDefault();
+      lightboxCloseRef.current?.focus();
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    lightboxCloseRef.current?.focus();
+
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [closeLightbox, lightboxImage]);
 
   const openProject = openProjectId
     ? (projects.find((project) => project.id === openProjectId) ?? null)
@@ -300,17 +361,31 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
   
 
       case "image": {
+        const image: LightboxImage = {
+          src: block.src,
+          alt: block.alt,
+          width: block.width,
+          height: block.height,
+        };
+
         if (!block.browser) {
           return (
-            <Image
+            <button
               key={index}
-              className={styles.modalScreenshot}
-              src={block.src}
-              alt={block.alt}
-              width={block.width}
-              height={block.height}
-              sizes="(max-width: 768px) 100vw, 850px"
-            />
+              type="button"
+              className={`${styles.modalImageButton} ${styles.modalImageButtonBlock}`}
+              onClick={(event) => openLightbox(image, event.currentTarget)}
+              aria-label={`${block.alt} — view larger`}
+            >
+              <Image
+                className={styles.modalScreenshot}
+                src={block.src}
+                alt=""
+                width={block.width}
+                height={block.height}
+                sizes="(max-width: 768px) 100vw, 850px"
+              />
+            </button>
           );
         }
 
@@ -343,15 +418,20 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
               ) : null}
             </div>
 
-            <div className={styles["browser-content"]}>
+            <button
+              type="button"
+              className={`${styles["browser-content"]} ${styles.modalImageButton}`}
+              onClick={(event) => openLightbox(image, event.currentTarget)}
+              aria-label={`${block.alt} — view larger`}
+            >
               <Image
                 src={block.src}
-                alt={block.alt}
+                alt=""
                 width={block.width}
                 height={block.height}
                 sizes="(max-width: 768px) 100vw, 850px"
               />
-            </div>
+            </button>
           </section>
         );
       }
@@ -680,6 +760,44 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
               </footer>
             </div>
           </div>
+        </div>
+      ) : null}
+
+      {lightboxImage ? (
+        <div
+          className={styles.lightboxOverlay}
+          role="dialog"
+          aria-modal="true"
+          aria-label={lightboxImage.alt}
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) closeLightbox();
+          }}
+        >
+          <button
+            ref={lightboxCloseRef}
+            type="button"
+            className={styles.lightboxClose}
+            onClick={closeLightbox}
+            aria-label="Close image"
+          >
+            <X size={18} weight="regular" aria-hidden="true" />
+          </button>
+
+          <figure className={styles.lightboxFigure}>
+            <Image
+              className={styles.lightboxImage}
+              src={lightboxImage.src}
+              alt={lightboxImage.alt}
+              width={lightboxImage.width}
+              height={lightboxImage.height}
+              sizes="100vw"
+              quality={90}
+              priority
+            />
+            <figcaption className={styles.lightboxCaption}>
+              {lightboxImage.alt}
+            </figcaption>
+          </figure>
         </div>
       ) : null}
     </>

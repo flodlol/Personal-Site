@@ -55,7 +55,7 @@ export default function Home() {
 
                 <p className={styles.heroSubtitle}>
                   Industrial Engineering student at KU Leuven.
-                  <br />I build apps and tools on the side.
+                  <br />I build webapps and tools on the side.
                 </p>
 
                 <div className={styles.heroActions}>

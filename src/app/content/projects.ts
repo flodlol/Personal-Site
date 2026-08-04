@@ -133,6 +133,56 @@ export const currentProjects: Project[] = [
 ];
 export const pastProjects: Project[] = [
   {
+    id: "statics-nvm",
+    title: "Statics NVM",
+    period: "July 2026 - August 2026",
+    stack: ["Next.js", "TypeScript", "KaTeX"],
+    description:
+      "I genuinely did not understand NVM diagrams, so I built the tool that explains them the way I needed to hear it.",
+    link: {
+      href: "https://sterkteleer.flodlol.dev",
+      label: "Statics NVM",
+    },
+    modal: {
+      content: [
+        {
+          type: "paragraph",
+          text: "NVM diagrams never clicked for me. I could follow a worked example in class and then stare at a blank page the moment I had to do one myself, which is a great way to feel stupid for a full semester. So I did the thing I always do when I do not understand something: I tried to build it, because you cannot fake your way through writing the rules down.",
+        },
+        {
+          type: "image",
+          src: "/sterkteleer/home-page.png",
+          alt: "Statics NVM editor with a frame, supports and loads on the canvas",
+          width: 2560,
+          height: 1440,
+          browser: {
+            title: "Statics NVM",
+            url: "sterkteleer.flodlol.dev",
+          },
+        },
+        {
+          type: "paragraph",
+          text: "You draw the structure on a grid, drop in supports and loads, and it solves live. The part I actually cared about is the worked solution underneath: reaction forces step by step, the split into regions, a free body diagram per region with the N(x), V(x) and M(x) functions, and then the diagrams themselves. Not just an answer, but the whole route to it, in the order my course teaches it.",
+        },
+        {
+          type: "image",
+          src: "/sterkteleer/home-page-2.png",
+          alt: "Statics NVM worked solution with a free body diagram and the N, V and M functions for each region",
+          width: 2560,
+          height: 1440,
+          browser: {
+            title: "Statics NVM",
+            url: "sterkteleer.flodlol.dev",
+          },
+        },
+        {
+          type: "paragraph",
+          text: "Building the solver taught me more than any exercise session did, mostly because the tests kept telling me exactly which part I had misunderstood. It is in Dutch and English, exercises save to a link you can share, and it turned out that writing something down properly is the only way I ever really learn it.",
+        },
+      ],
+    },
+  },
+  {
     id: "clowbie",
     title: "Clowbie",
     period: "August 2026",
