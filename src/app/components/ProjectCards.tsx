@@ -292,7 +292,7 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
     openProject?.links ?? (openProject?.link ? [openProject.link] : []);
 
   const renderModalBlock = (
-    block: any,
+    block: ProjectModalContentBlock,
     index: number,
     leadParagraphIndex: number | null,
   ): React.ReactNode => {
@@ -398,7 +398,7 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
         );
 
       case "paragraph": {
-        const paragraphText = (block as unknown as { text?: string }).text ?? "";
+        const paragraphText = block.text ?? "";
         const paragraphClassName =
           index === leadParagraphIndex ? styles.modalLead : undefined;
 
@@ -428,6 +428,9 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
           </Fragment>
         );
       }
+
+      default:
+        return null;
     }
   };
 
