@@ -146,7 +146,7 @@ export const pastProjects: Project[] = [
     description:
       "A small site for my sister's 3D printing hobby, made so her prints have a proper little home online.",
     link: {
-      href: "https://clowbie.netlify.app",
+      href: "https://clowbie.com",
       label: "Clowbie",
     },
     logo: {
@@ -170,7 +170,7 @@ export const pastProjects: Project[] = [
           height: 1583,
           browser: {
             title: "Clowbie",
-            url: "clowbie.netlify.app",
+            url: "clowbie.com",
           },
         },
 
