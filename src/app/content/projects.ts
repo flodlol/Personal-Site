@@ -19,6 +19,23 @@ export type ProjectModalContentBlock =
       alt: string;
       width: number;
       height: number;
+      browser?: {
+        title?: string;
+        url: string;
+      };
+    }
+  | {
+      type: "reelGallery";
+      items: {
+        href: string;
+        src: string;
+        alt: string;
+        width: number;
+        height: number;
+        likes: string;
+        comments: string;
+        views: string;
+      }[];
     };
 
 export type Project = {
@@ -48,7 +65,7 @@ export const currentProjects: Project[] = [
     period: "Oktober 2025 - Now",
     stack: ["React (Vite)", "Firebase", "Stripe"],
     description:
-      "I wanted to know where my study time was actually going, so I started building the tracker I could not find.",
+      "My main side project at the moment. I have been building it for a while now, it is past 5k users, and we are finally starting to see real growth.",
     link: { href: "https://study-track.app", label: "Study-Track" },
     logo: {
       src: "/study-track/study-track-logo.png",
@@ -63,6 +80,17 @@ export const currentProjects: Project[] = [
           text: "I kept finishing busy days with no clear idea of what I had actually done. Most trackers wanted me to spend more time managing the tracker, which was not exactly helping, so I built Study-Track. It pulls in academic schedules, makes starting a study session quick, and turns the result into something I can actually read. There is a social side too, because studying next to friends works better for me than another motivational notification.",
         },
         {
+          type: "image",
+          src: "/study-track/home-page.png",
+          alt: "Study-Track homepage",
+          width: 2940,
+          height: 1583,
+          browser: {
+            title: "Study-Track",
+            url: "study-track.app",
+          },
+        },
+        {
           type: "paragraph",
           text: "There is no team hiding behind it. I do the product, design, frontend, backend, and occasionally break all four at once. It is live, people use it, and I still change my mind about parts of it every week.",
         },
@@ -75,7 +103,7 @@ export const currentProjects: Project[] = [
     period: "February 2026 - Now",
     stack: ["Next.js", "TypeScript", "PDF.js"],
     description:
-      "Lecture slides are terrible for handwritten notes. Drop in a PDF, get something you can actually write on.",
+      "I got annoyed with lecture slides being awful for handwritten notes, so I built a way to drop in a PDF and get something you can actually use.",
     links: [
       { href: "https://hand-outs.com", label: "Hand-Outs" },
       {
@@ -135,6 +163,18 @@ export const pastProjects: Project[] = [
           text: "Clowbie is a small website I made for my sister's 3D printing hobby. She had the fun part covered already: making prints, trying ideas, and turning plastic into little objects people actually want to look at. I wanted to give that work a clean place to live online instead of leaving it scattered in messages or photos.",
         },
         {
+          type: "image",
+          src: "/clowbie/home-page.png",
+          alt: "Clowbie homepage",
+          width: 2940,
+          height: 1583,
+          browser: {
+            title: "Clowbie",
+            url: "clowbie.netlify.app",
+          },
+        },
+
+        {
           type: "paragraph",
           text: "Even though it looks simple, it is a fully working site behind the scenes. It handles products, shipping details, and an admin dashboard, so she can manage the hobby without needing a pile of manual work around it. It is still intentionally personal, but it has the practical bits a real shop-like site needs.",
         },
@@ -169,7 +209,11 @@ export const pastProjects: Project[] = [
       content: [
         {
           type: "paragraph",
-          text: "A lot of TNT Tag history lived in old videos, forgotten forum posts, and people's memories. I had stopped playing by then, but I was bored one winter break and thought organizing all of it sounded fun. I built a navigable timeline for updates, guilds, creators, rivalries, and the bits of community history that usually disappear. It was the first time I had structured that much connected data.",
+          text: "TNT Tag is a Minecraft minigame where one player starts with the TNT and has to tag someone else before it explodes, so each round becomes a very fast game of chase and survival.",
+        },
+        {
+          type: "paragraph",
+          text: " A lot of its history lived in old videos, forgotten forum posts, and people's memories. I had stopped playing by then, but I was bored one winter break and thought organizing all of it sounded fun. I built a navigable timeline for updates, guilds, creators, rivalries, and the bits of community history that usually disappear.",
         },
         {
           type: "image",
@@ -194,7 +238,7 @@ export const smallerPythonProjects: Project[] = [
     period: "August 2024",
     stack: "Python",
     description:
-      "A Python shortcut for turning a dumb idea into a reel before the joke stops being funny.",
+      "A Python script to get rich of social media (real).",
     link: {
       href: "https://github.com/flodlol/Reel-Generator",
       label: "GitHub",
@@ -209,7 +253,46 @@ export const smallerPythonProjects: Project[] = [
       content: [
         {
           type: "paragraph",
-          text: "Sometimes I had an idea for a stupid reel and opening a full editor felt like enough work to kill it. So I made a small Python tool that handles the repetitive part. It takes the clips and assets, applies the same format, and exports something ready to share. It is intentionally small because a full editor already exists, and I did not want to accidentally build another one. Less editing, more finding out whether the joke was actually funny.",
+          text: "My best mate Egon and I had this stupid idea of trying to get rich off social media. The idea was to contribute to the braindead content slop before the AI slop took over. We took a bunch of images, quotes, and sounds, put them in folders, and let the script do the rest. It would randomly pick a sound, an image, and a quote, then generate a reel with the right dimensions and duration.",
+        },
+        {
+          type: "reelGallery",
+          items: [
+            {
+              href: "https://www.instagram.com/reel/C-3qZcWt7Y3/",
+              src: "/reel-generator/reel-1.jpg",
+              alt: "Reel-Generator Instagram reel preview 1",
+              width: 640,
+              height: 640,
+              likes: "23K",
+              comments: "16",
+              views: "465K",
+            },
+            {
+              href: "https://www.instagram.com/reel/C-73yXmNCJE/",
+              src: "/reel-generator/reel-2.jpg",
+              alt: "Reel-Generator Instagram reel preview 2",
+              width: 640,
+              height: 640,
+              likes: "237K",
+              comments: "14",
+              views: "2.3M",
+            },
+            {
+              href: "https://www.instagram.com/reel/C_fhI-ntJgW/",
+              src: "/reel-generator/reel-3.jpg",
+              alt: "Reel-Generator Instagram reel preview 3",
+              width: 640,
+              height: 640,
+              likes: "28.9K",
+              comments: "91",
+              views: "688K",
+            },
+          ],
+        },
+        {
+          type: "paragraph",
+          text: "It was a fun little project, but we never got rich.",
         },
       ],
     },
@@ -229,7 +312,7 @@ export const smallerPythonProjects: Project[] = [
       content: [
         {
           type: "paragraph",
-          text: "Naming a project is already annoying. Finding out that the name is taken on the ninth website is worse, so I built a small CLI that checks the obvious places in one go.",
+          text: "I hated searching all sites to see if a username was taken, so I wrote this simple Python script to do it for me. It checks a username across the internet and prints a clear available, taken, unknown, or error result.",
         },
         {
           type: "image",

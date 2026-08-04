@@ -12,7 +12,7 @@ import {
 } from "react";
 import { flushSync } from "react-dom";
 import styles from "../../styles/pages/home.module.css";
-import type { Project } from "../content/projects";
+import type { Project, ProjectModalContentBlock } from "../content/projects";
 
 type NativeViewTransition = {
   finished: Promise<unknown>;
@@ -291,6 +291,146 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
   const openProjectLinks =
     openProject?.links ?? (openProject?.link ? [openProject.link] : []);
 
+  const renderModalBlock = (
+    block: any,
+    index: number,
+    leadParagraphIndex: number | null,
+  ): React.ReactNode => {
+    switch (block.type) {
+  
+
+      case "image": {
+        if (!block.browser) {
+          return (
+            <Image
+              key={index}
+              className={styles.modalScreenshot}
+              src={block.src}
+              alt={block.alt}
+              width={block.width}
+              height={block.height}
+              sizes="(max-width: 768px) 100vw, 850px"
+            />
+          );
+        }
+
+        return (
+          <section key={index} className={styles["browser-window"]}>
+            <div className={styles["browser-toolbar"]}>
+              <div
+                className={styles["browser-traffic-lights"]}
+                aria-hidden="true"
+              >
+                <span
+                  className={`${styles["browser-dot"]} ${styles["browser-dot-red"]}`}
+                />
+                <span
+                  className={`${styles["browser-dot"]} ${styles["browser-dot-yellow"]}`}
+                />
+                <span
+                  className={`${styles["browser-dot"]} ${styles["browser-dot-green"]}`}
+                />
+              </div>
+
+              <div className={styles["browser-address"]}>
+                {block.browser.url}
+              </div>
+
+              {block.browser.title ? (
+                <div className={styles["browser-title"]}>
+                  {block.browser.title}
+                </div>
+              ) : null}
+            </div>
+
+            <div className={styles["browser-content"]}>
+              <Image
+                src={block.src}
+                alt={block.alt}
+                width={block.width}
+                height={block.height}
+                sizes="(max-width: 768px) 100vw, 850px"
+              />
+            </div>
+          </section>
+        );
+      }
+
+      case "reelGallery":
+        return (
+          <section key={index} className={styles.modalReelGallery}>
+            {block.items.map((item) => (
+              <a
+                key={item.href}
+                className={styles.modalReelCard}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <div className={styles.modalReelMedia}>
+                  <Image
+                    className={styles.modalReelThumbnail}
+                    src={item.src}
+                    alt={item.alt}
+                    width={item.width}
+                    height={item.height}
+                    sizes="(max-width: 768px) 100vw, 26rem"
+                  />
+                  <span className={styles.modalReelBadge}>Instagram reel</span>
+                </div>
+
+                <div className={styles.modalReelBody}>
+                  <div className={styles.modalReelStats}>
+                    <span>
+                      <strong>{item.likes}</strong> likes
+                    </span>
+                    <span>
+                      <strong>{item.comments}</strong> comments
+                    </span>
+                    <span>
+                      <strong>{item.views}</strong> views
+                    </span>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </section>
+        );
+
+      case "paragraph": {
+        const paragraphText = (block as unknown as { text?: string }).text ?? "";
+        const paragraphClassName =
+          index === leadParagraphIndex ? styles.modalLead : undefined;
+
+        return (
+          <Fragment key={index}>
+            {index === leadParagraphIndex
+              ? openProjectLinks.slice(0, 1).map((link) => (
+                  <a
+                    key={`${link.href}-${link.label}-story`}
+                    className={styles.modalStoryLink}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {formatLinkDomain(link)}
+                    <ArrowUpRight
+                      size={14}
+                      weight="regular"
+                      aria-hidden="true"
+                    />
+                  </a>
+                ))
+              : null}
+            <p className={paragraphClassName}>
+              {renderParagraphText(paragraphText)}
+            </p>
+          </Fragment>
+        );
+      }
+    }
+  };
+
   return (
     <>
       <div className={styles.projects}>
@@ -487,13 +627,14 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
               <div className={styles.modalStory}>
                 <div className={styles.modalBodyInner}>
                 {(() => {
-                  const blocks =
+                  const blocks = (
                     openProjectModal.content ??
                     openProjectModal.paragraphs?.map((text) => ({
                       type: "paragraph" as const,
                       text,
                     })) ??
-                    [];
+                    []
+                  ) as ProjectModalContentBlock[];
                   const paragraphBlockIndexes = blocks.reduce<number[]>(
                     (acc, block, index) => {
                       if (block.type === "paragraph") acc.push(index);
@@ -503,52 +644,9 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
                   );
                   const leadParagraphIndex = paragraphBlockIndexes[0] ?? null;
 
-                  return blocks.map((block, index) => {
-                    if (block.type === "image") {
-                      return (
-                        <Image
-                          key={index}
-                          className={styles.modalScreenshot}
-                          src={block.src}
-                          alt={block.alt}
-                          width={block.width}
-                          height={block.height}
-                          sizes="(max-width: 768px) 100vw, 850px"
-                        />
-                      );
-                    }
-
-                    const paragraphClassName =
-                      index === leadParagraphIndex
-                        ? styles.modalLead
-                        : undefined;
-
-                    return (
-                      <Fragment key={index}>
-                        {index === leadParagraphIndex
-                          ? openProjectLinks.slice(0, 1).map((link) => (
-                              <a
-                                key={`${link.href}-${link.label}-story`}
-                                className={styles.modalStoryLink}
-                                href={link.href}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                {formatLinkDomain(link)}
-                                <ArrowUpRight
-                                  size={14}
-                                  weight="regular"
-                                  aria-hidden="true"
-                                />
-                              </a>
-                            ))
-                          : null}
-                        <p className={paragraphClassName}>
-                          {renderParagraphText(block.text)}
-                        </p>
-                      </Fragment>
-                    );
-                  });
+                  return blocks.map((block, index) =>
+                    renderModalBlock(block, index, leadParagraphIndex),
+                  );
                 })()}
                 </div>
               </div>
