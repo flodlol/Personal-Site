@@ -200,11 +200,10 @@ export const pastProjects: Project[] = [
       label: "Clowbie",
     },
     logo: {
-      src: "/clowbie-logo.svg",
+      src: "/clowbie/clowbie-logo.png",
       alt: "Clowbie logo",
-      width: 2048,
-      height: 1720,
-      darkMark: true,
+      width: 1024,
+      height: 1024,
     },
     modal: {
       content: [
