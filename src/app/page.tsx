@@ -57,6 +57,9 @@ export default function Home() {
                   Industrial Engineering student at KU Leuven.
                   <br />I build webapps and tools on the side.
                 </p>
+                <span className={styles.srOnly}>
+                  Jonas Meuleman, also known online as flodlol.
+                </span>
 
                 <div className={styles.heroActions}>
                   <a className={styles.heroPrimaryAction} href="#current-projects">
@@ -136,7 +139,7 @@ export default function Home() {
                 A Calypso Inc. production.
               </span>
               <span className={styles.footerText}>
-                © {year} Jonas. All rights reserved.
+                © {year} Jonas Meuleman. All rights reserved.
               </span>
             </div>
           </div>

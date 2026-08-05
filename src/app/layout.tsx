@@ -2,12 +2,25 @@ import type { Metadata, Viewport } from "next";
 import "../styles/globals.css";
 
 const description =
-  "Industrial Engineering student at KU Leuven. I build webapps and tools on the side.";
+  "Jonas Meuleman, known online as flodlol, is an Industrial Engineering student at KU Leuven who builds webapps and tools on the side — including Study-Track, Hand-Outs, and Statics NVM.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://flodlol.dev"),
   title: "Jonas | Portfolio",
   description,
+  keywords: [
+    "Jonas Meuleman",
+    "flodlol",
+    "KU Leuven",
+    "Industrial Engineering",
+    "Study-Track",
+    "Hand-Outs",
+    "Statics NVM",
+    "software developer",
+    "web developer",
+  ],
+  authors: [{ name: "Jonas Meuleman", url: "https://flodlol.dev" }],
+  creator: "Jonas Meuleman",
   openGraph: {
     type: "website",
     url: "/",
@@ -36,6 +49,57 @@ export const viewport: Viewport = {
   themeColor: "#9dacff",
 };
 
+// Ties the "Jonas Meuleman" identity to this site and its projects for
+// search engines, separate from unrelated online aliases/profiles.
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Jonas Meuleman",
+  alternateName: "flodlol",
+  url: "https://flodlol.dev",
+  image: "https://flodlol.dev/flod-icon.png",
+  description,
+  jobTitle: "Industrial Engineering Student & Software Developer",
+  affiliation: {
+    "@type": "CollegeOrUniversity",
+    name: "KU Leuven",
+  },
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: "KU Leuven",
+  },
+  sameAs: ["https://github.com/flodlol"],
+  knowsAbout: [
+    "React",
+    "TypeScript",
+    "Next.js",
+    "Python",
+    "Firebase",
+    "Automation",
+    "Developer Tooling",
+  ],
+  owns: [
+    {
+      "@type": "SoftwareApplication",
+      name: "Study-Track",
+      url: "https://study-track.app",
+      applicationCategory: "Productivity",
+    },
+    {
+      "@type": "SoftwareApplication",
+      name: "Hand-Outs",
+      url: "https://hand-outs.com",
+      applicationCategory: "Productivity",
+    },
+    {
+      "@type": "SoftwareApplication",
+      name: "Statics NVM",
+      url: "https://sterkteleer.flodlol.dev",
+      applicationCategory: "EducationalApplication",
+    },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -43,7 +107,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>{children}</body>
+      <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
+        {children}
+      </body>
     </html>
   );
 }
