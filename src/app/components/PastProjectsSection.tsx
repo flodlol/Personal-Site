@@ -17,17 +17,15 @@ export default function PastProjectsSection() {
         </div>
       </div>
 
-      <ProjectCards projects={pastProjects} />
+      <ProjectCards projects={pastProjects} hideLogos />
 
       <details className={styles.pythonProjectsSection}>
         <summary className={styles.pythonProjectsSummary}>
           <span className={styles.pythonProjectsSummaryContent}>
-            <span className={styles.pythonProjectsIcon} aria-hidden="true">
-              <SkillLogo
-                icon="python"
-                className={styles.pythonProjectsIconMark}
-              />
-            </span>
+            <SkillLogo
+              icon="python"
+              className={styles.pythonProjectsInlineIcon}
+            />
             <span className={styles.pythonProjectsTitle}>
               Smaller Python Projects
             </span>
@@ -49,7 +47,7 @@ export default function PastProjectsSection() {
           </svg>
         </summary>
         <div className={styles.pythonProjectsBody}>
-          <ProjectCards projects={smallerPythonProjects} />
+          <ProjectCards projects={smallerPythonProjects} compact hideLogos />
         </div>
       </details>
     </section>

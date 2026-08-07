@@ -142,7 +142,15 @@ function renderParagraphText(text: string) {
   return nodes;
 }
 
-export default function ProjectCards({ projects }: { projects: Project[] }) {
+export default function ProjectCards({
+  projects,
+  compact = false,
+  hideLogos = false,
+}: {
+  projects: Project[];
+  compact?: boolean;
+  hideLogos?: boolean;
+}) {
   const [openProjectId, setOpenProjectId] = useState<string | null>(null);
   const [usesNativeTransition, setUsesNativeTransition] = useState(false);
   const [lightboxImage, setLightboxImage] = useState<LightboxImage | null>(null);
@@ -516,7 +524,11 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
 
   return (
     <>
-      <div className={styles.projects}>
+      <div
+        className={`${styles.projects}${
+          compact ? ` ${styles.projectsCompact}` : ""
+        }`}
+      >
         {projects.map((project, projectIndex) => {
           const isClickable = Boolean(project.modal);
           const stack = formatStack(project.stack);
@@ -594,7 +606,7 @@ export default function ProjectCards({ projects }: { projects: Project[] }) {
                 ) : null}
               </div>
 
-              {project.logo && project.showLogoOnCard !== false ? (
+              {project.logo && project.showLogoOnCard !== false && !hideLogos ? (
                 <div className={styles.projectCardAside} aria-hidden="true">
                   <Image
                     className={styles.projectLogo}

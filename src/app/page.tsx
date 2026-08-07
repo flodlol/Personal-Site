@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import styles from "../styles/pages/home.module.css";
 import ProjectsSection from "./components/ProjectsSection";
 import PastProjectsSection from "./components/PastProjectsSection";
@@ -71,7 +72,7 @@ export default function Home() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    GitHub <span aria-hidden="true">&#8599;</span>
+                    GitHub <ArrowUpRight size={15} weight="regular" aria-hidden="true" />
                   </a>
                 </div>
               </div>

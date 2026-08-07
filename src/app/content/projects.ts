@@ -205,6 +205,7 @@ export const pastProjects: Project[] = [
       width: 1024,
       height: 1024,
     },
+    showLogoOnCard: false,
     modal: {
       content: [
         {
@@ -298,6 +299,7 @@ export const smallerPythonProjects: Project[] = [
       width: 1024,
       height: 1024,
     },
+    showLogoOnCard: false,
     modal: {
       content: [
         {
