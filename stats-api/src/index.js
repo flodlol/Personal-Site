@@ -9,7 +9,9 @@ const app = express();
 app.disable("x-powered-by");
 app.use(express.json({ limit: "1kb" }));
 
-const allowedOrigins = (process.env.ALLOWED_ORIGIN ?? "")
+const allowedOrigins = (
+  process.env.ALLOWED_ORIGIN ?? "https://flodlol.dev"
+)
   .split(",")
   .map((origin) => origin.trim())
   .filter(Boolean);
