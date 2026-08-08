@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // stats-api is a separate Express service, not part of the Next.js app.
+    "stats-api/**",
   ]),
 ]);
 

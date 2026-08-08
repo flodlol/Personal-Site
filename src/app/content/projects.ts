@@ -46,6 +46,7 @@ export type Project = {
   description: string;
   link?: ProjectLink;
   links?: ProjectLink[];
+  repo?: string;
   logo?: {
     src: string;
     alt: string;
@@ -111,6 +112,7 @@ export const currentProjects: Project[] = [
         label: "GitHub",
       },
     ],
+    repo: "flodlol/PDF-Slides-to-Hand-Outs",
     logo: {
       src: "/hand-outs/hand-outs-logo.png",
       alt: "Hand-Outs logo",

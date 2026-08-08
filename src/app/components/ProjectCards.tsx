@@ -13,6 +13,7 @@ import {
 import { flushSync } from "react-dom";
 import styles from "../../styles/pages/home.module.css";
 import type { Project, ProjectModalContentBlock } from "../content/projects";
+import RepoStars from "./RepoStars";
 
 type NativeViewTransition = {
   finished: Promise<unknown>;
@@ -592,18 +593,27 @@ export default function ProjectCards({
                 <p className={styles.projectDescription}>
                   {project.description}
                 </p>
-                {primaryLink ? (
-                  <a
-                    className={styles.projectLink}
-                    href={primaryLink.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(event) => event.stopPropagation()}
-                  >
-                    {primaryLink.label}
-                    <ArrowUpRight size={13} weight="regular" aria-hidden="true" />
-                  </a>
-                ) : null}
+                <div className={styles.projectLinkRow}>
+                  {primaryLink ? (
+                    <a
+                      className={styles.projectLink}
+                      href={primaryLink.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(event) => event.stopPropagation()}
+                    >
+                      {primaryLink.label}
+                      <ArrowUpRight
+                        size={13}
+                        weight="regular"
+                        aria-hidden="true"
+                      />
+                    </a>
+                  ) : null}
+                  {project.repo ? (
+                    <RepoStars repo={project.repo} />
+                  ) : null}
+                </div>
               </div>
 
               {project.logo && project.showLogoOnCard !== false && !hideLogos ? (
@@ -753,21 +763,33 @@ export default function ProjectCards({
                     : "Want to poke around the actual thing?"}
                 </p>
                 <div className={styles.modalProjectLinks}>
-                  {openProjectLinks.map((link) => (
-                    <a
-                      key={`${link.href}-${link.label}-footer`}
-                      href={link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {link.label}
-                      <ArrowUpRight
-                        size={15}
-                        weight="regular"
-                        aria-hidden="true"
-                      />
-                    </a>
-                  ))}
+                  {openProjectLinks.map((link) => {
+                    const isGitHubLink = /github\.com/i.test(link.href);
+                    const showStars = isGitHubLink && Boolean(openProject.repo);
+                    return (
+                      <a
+                        key={`${link.href}-${link.label}-footer`}
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {link.label}
+                        {showStars ? (
+                          <span className={styles.modalProjectLinkStars}>
+                            <RepoStars
+                              repo={openProject.repo as string}
+                              className={styles.modalProjectLinkStarsBadge}
+                            />
+                          </span>
+                        ) : null}
+                        <ArrowUpRight
+                          size={15}
+                          weight="regular"
+                          aria-hidden="true"
+                        />
+                      </a>
+                    );
+                  })}
                 </div>
               </footer>
             </div>

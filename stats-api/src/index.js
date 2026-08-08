@@ -104,7 +104,7 @@ app.use((req, res) => {
   res.status(404).json({ error: "Not found" });
 });
 
-app.use((error, _req, res, _next) => {
+app.use((error, _req, res, _unused) => {
   if (error.status === 403) {
     return res.status(403).json({ error: error.message });
   }

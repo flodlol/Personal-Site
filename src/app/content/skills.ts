@@ -13,6 +13,7 @@ export type SkillIcon =
 export type SkillItem = {
   label: string;
   icon: SkillIcon;
+  url?: string;
 };
 
 export type SkillGroup = {
@@ -24,11 +25,27 @@ export const heroSkills: SkillGroup[] = [
   {
     label: "I like to work with",
     items: [
-      { label: "TypeScript", icon: "typescript" },
-      { label: "JavaScript", icon: "javascript" },
-      { label: "Python", icon: "python" },
-      { label: "HTML", icon: "html" },
-      { label: "CSS", icon: "css" },
+      {
+        label: "TypeScript",
+        icon: "typescript",
+        url: "https://www.typescriptlang.org/",
+      },
+      {
+        label: "JavaScript",
+        icon: "javascript",
+        url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+      },
+      { label: "Python", icon: "python", url: "https://www.python.org/" },
+      {
+        label: "HTML",
+        icon: "html",
+        url: "https://developer.mozilla.org/en-US/docs/Web/HTML",
+      },
+      {
+        label: "CSS",
+        icon: "css",
+        url: "https://developer.mozilla.org/en-US/docs/Web/CSS",
+      },
     ],
   },
 ];
