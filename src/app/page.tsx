@@ -57,6 +57,16 @@ export default function Home() {
                 <p className={styles.heroSubtitle}>
                   Industrial Engineering student at KU Leuven.
                   <br />I build webapps and tools on the side.
+                  <br />Solo founder of{" "}
+                  <a
+                    className={styles.heroSubtitleLink}
+                    href="https://study-track.app"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Study-Track
+                  </a>
+                  .
                 </p>
                 <span className={styles.srOnly}>
                   Jonas Meuleman, also known online as flodlol.

@@ -100,6 +100,22 @@ export default async function OpengraphImage() {
               <div style={{ display: "flex" }}>
                 I build webapps and tools on the side.
               </div>
+              <div style={{ display: "flex" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    color: "#c8ceff",
+                    textDecoration: "underline",
+                    textDecorationColor: "rgba(157, 172, 255, 0.45)",
+                  }}
+                >
+                  study-track.app
+                </div>
+                <div style={{ display: "flex" }}>
+                  {" "}
+                  — solo founder of Study-Track.
+                </div>
+              </div>
             </div>
           </div>
 

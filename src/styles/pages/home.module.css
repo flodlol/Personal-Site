@@ -284,6 +284,23 @@
   line-height: 1.65;
 }
 
+.heroSubtitleLink {
+  color: #c8ceff;
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+  text-decoration-color: rgba(157, 172, 255, 0.45);
+  transition:
+    color 160ms ease,
+    text-decoration-color 160ms ease;
+}
+
+.heroSubtitleLink:hover,
+.heroSubtitleLink:focus-visible {
+  color: #e2e7ff;
+  text-decoration-color: rgba(196, 206, 255, 0.9);
+  outline: none;
+}
+
 .heroActions {
   margin-top: 2rem;
   display: flex;
@@ -1172,7 +1189,7 @@
 
 .contactSecondary {
   display: grid;
-  grid-template-rows: minmax(0, 1fr) auto auto;
+  grid-template-rows: minmax(0, 1fr) auto auto auto;
   gap: 1rem;
 }
 
@@ -2295,11 +2312,11 @@
 
   .contactSecondary {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: auto auto;
+    grid-template-rows: auto auto auto;
   }
 
   .contactDiscord {
-    grid-row: span 2;
+    grid-row: span 3;
   }
 
   .projectCard,

@@ -8,6 +8,7 @@ import {
   DiscordLogo,
   EnvelopeSimple,
   GithubLogo,
+  LinkedinLogo,
 } from "@phosphor-icons/react";
 import styles from "../../styles/pages/home.module.css";
 
@@ -165,6 +166,31 @@ export default function ContactSection() {
                 See what I&apos;m building
               </span>
               <span className={styles.contactSocialText}>github.com/flodlol</span>
+            </span>
+            <ArrowUpRight
+              className={styles.contactSocialArrow}
+              size={21}
+              weight="regular"
+              aria-hidden="true"
+            />
+          </a>
+
+          <a
+            className={styles.contactSocialLink}
+            href="https://www.linkedin.com/in/jonas-meuleman-26667a39a/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span className={styles.contactSocialIcon} aria-hidden="true">
+              <LinkedinLogo size={22} weight="fill" />
+            </span>
+            <span>
+              <span className={styles.contactSocialTitle}>
+                Let&apos;s connect
+              </span>
+              <span className={styles.contactSocialText}>
+                linkedin.com/in/jonas-meuleman
+              </span>
             </span>
             <ArrowUpRight
               className={styles.contactSocialArrow}

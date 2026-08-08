@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: flodlol-stats-api
+    runtime: node
+    plan: free
+    rootDir: stats-api
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: UPSTASH_REDIS_REST_URL
+        sync: false
+      - key: UPSTASH_REDIS_REST_TOKEN
+        sync: false
+      - key: REPOS
+        value: "flodlol/Personal-Site,flodlol/Tag-History,flodlol/PDF-Slides-to-Hand-Outs,flodlol/Username-Availability-Checker,flodlol/Reel-Generator"
+      - key: ALLOWED_ORIGIN
+        value: "https://flodlol.dev"
+      - key: NODE_VERSION
+        value: "20"
