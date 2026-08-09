@@ -11,7 +11,7 @@ const REFRESH_INTERVAL_MS = 5 * 60 * 1000;
 const TICK_INTERVAL_MS = 1000;
 
 type Stats = {
-  visits: { total: number; uniqueToday: number; since: string | null };
+  visits: { total: number; uniqueToday: number };
   stars: { total: number; repos: Array<{ repo: string; stars: number | null }> };
 };
 
@@ -19,11 +19,11 @@ function formatNumber(value: number) {
   return new Intl.NumberFormat("en-US").format(value);
 }
 
-function formatElapsed(sinceIso: string | null, nowMs: number) {
-  if (!sinceIso) return "—";
-  const sinceMs = new Date(sinceIso).getTime();
-  if (Number.isNaN(sinceMs)) return "—";
-  const totalSeconds = Math.max(0, Math.floor((nowMs - sinceMs) / 1000));
+function formatElapsed(startedAtMs: number, nowMs: number) {
+  const totalSeconds = Math.max(
+    0,
+    Math.floor((nowMs - startedAtMs) / 1000),
+  );
   const days = Math.floor(totalSeconds / 86400);
   const hours = Math.floor((totalSeconds % 86400) / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -35,7 +35,7 @@ function formatElapsed(sinceIso: string | null, nowMs: number) {
 }
 
 export default function SiteStats() {
-  const [since, setSince] = useState<string | null>(null);
+  const [sessionStartedAt] = useState(() => Date.now());
   const [total, setTotal] = useState<number | null>(null);
   const [nowMs, setNowMs] = useState(() => Date.now());
 
@@ -61,7 +61,6 @@ export default function SiteStats() {
         if (!response.ok) return;
         const data = (await response.json()) as Stats;
         if (cancelled) return;
-        setSince(data.visits.since);
         setTotal(data.visits.total);
       } catch {
         /* network errors are fine, footer will retry */
@@ -79,19 +78,18 @@ export default function SiteStats() {
   }, []);
 
   useEffect(() => {
-    if (!since) return;
     const id = window.setInterval(() => setNowMs(Date.now()), TICK_INTERVAL_MS);
     return () => window.clearInterval(id);
-  }, [since]);
+  }, []);
 
   const elapsed = useMemo(
-    () => formatElapsed(since, nowMs),
-    [since, nowMs],
+    () => formatElapsed(sessionStartedAt, nowMs),
+    [nowMs, sessionStartedAt],
   );
 
   return (
     <div className={styles.siteStats} aria-label="Site statistics">
-      <span className={styles.siteStat}>
+      <span className={styles.siteStat} aria-label={`Time on this visit: ${elapsed}`}>
         <Clock size={13} weight="regular" aria-hidden="true" />
         <span className={styles.siteStatValue}>{elapsed}</span>
       </span>
@@ -111,4 +109,3 @@ export default function SiteStats() {
     </div>
   );
 }
-

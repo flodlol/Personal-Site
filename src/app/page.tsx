@@ -179,14 +179,15 @@ export default function Home() {
           <div className={styles.footerRight}>
             <SiteStats />
             <span className={styles.footerText}>
-              This project is open source, view it{" "}
+              This project is open source on{" "}
               <a
                 className={styles.footerLink}
                 href="https://github.com/flodlol/Personal-Site"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Personal-Site source code on GitHub"
               >
-                here
+                GitHub
               </a>
               .
             </span>

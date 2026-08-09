@@ -532,7 +532,7 @@ a.heroSkillLink:focus-visible .heroSkillIcon {
   min-height: 14.5rem;
 }
 
-.projectCard[role="button"] {
+.projectCard[data-clickable="true"] {
   cursor: pointer;
 }
 
@@ -543,9 +543,17 @@ a.heroSkillLink:focus-visible .heroSkillIcon {
   z-index: 2;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.35rem;
+  min-width: 5.75rem;
+  min-height: 2.75rem;
+  padding: 0 0.55rem;
   color: #8f94bd;
+  background: transparent;
+  border: 0;
+  border-radius: 0.45rem;
   font-size: 0.69rem;
+  cursor: pointer;
   opacity: 0;
   transform: translate3d(0, 0.4rem, 0);
   transition:
@@ -553,8 +561,8 @@ a.heroSkillLink:focus-visible .heroSkillIcon {
     transform 180ms ease;
 }
 
-.projectCard[role="button"]:hover,
-.projectCard[role="button"]:focus-visible {
+.projectCard[data-clickable="true"]:hover,
+.projectCard[data-clickable="true"]:focus-within {
   outline: none;
   transform: translateY(-2px);
   background:
@@ -564,15 +572,20 @@ a.heroSkillLink:focus-visible .heroSkillIcon {
   border-color: rgba(255, 255, 255, 0.2);
 }
 
-.projectCard[role="button"]:hover::before,
-.projectCard[role="button"]:focus-visible::before {
+.projectCard[data-clickable="true"]:hover::before,
+.projectCard[data-clickable="true"]:focus-within::before {
   transform: translate3d(34%, 0, 0) rotate(4deg);
 }
 
-.projectCard[role="button"]:hover .projectOpenHint,
-.projectCard[role="button"]:focus-visible .projectOpenHint {
+.projectCard[data-clickable="true"]:hover .projectOpenHint,
+.projectCard[data-clickable="true"]:focus-within .projectOpenHint {
   opacity: 1;
   transform: translate3d(0, 0, 0);
+}
+
+.projectOpenHint:focus-visible {
+  outline: 2px solid rgba(157, 172, 255, 0.8);
+  outline-offset: 2px;
 }
 
 .projectIndex {
@@ -675,6 +688,8 @@ a.heroSkillLink:focus-visible .heroSkillIcon {
 }
 
 .projectLink {
+  min-height: 2.75rem;
+  padding: 0.45rem 0;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -915,7 +930,7 @@ details.pythonProjectsSection > summary {
 }
 
 .projectsCompact .projectCard:hover .projectOpenHint,
-.projectsCompact .projectCard:focus-visible .projectOpenHint {
+.projectsCompact .projectCard:focus-within .projectOpenHint {
   opacity: 1;
   transform: translate3d(0, 0, 0);
   color: #b4bdff;
@@ -1091,7 +1106,7 @@ details.pythonProjectsSection > summary {
 .timelineBody {
   max-width: 29rem;
   margin-top: 0.45rem;
-  color: #85858c;
+  color: #a0a0a6;
   font-size: 0.92rem;
   line-height: 1.6;
 }
@@ -1157,12 +1172,10 @@ details.pythonProjectsSection > summary {
 
 @keyframes timelineReveal {
   from {
-    opacity: 0.28;
     transform: translate3d(0, 1.1rem, 0);
   }
 
   to {
-    opacity: 1;
     transform: translate3d(0, 0, 0);
   }
 }
@@ -1574,8 +1587,10 @@ details.pythonProjectsSection > summary {
 }
 
 .siteStatLabel {
-  color: #76767d;
-  font-size: 0.85rem;
+  color: #8e8e94;
+  font-size: 0.92rem;
+  font-weight: 400;
+  letter-spacing: normal;
 }
 
 .siteStatTooltip {
@@ -1687,7 +1702,7 @@ details.pythonProjectsSection > summary {
 .footerRight {
   align-items: flex-start;
   flex-direction: column;
-  gap: 0.55rem;
+  gap: 0.2rem;
 }
 
 .footerText,

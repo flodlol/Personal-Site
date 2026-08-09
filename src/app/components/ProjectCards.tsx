@@ -158,6 +158,7 @@ export default function ProjectCards({
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const modalRef = useRef<HTMLDivElement | null>(null);
   const projectCardRefs = useRef(new Map<string, HTMLElement>());
+  const projectTriggerRefs = useRef(new Map<string, HTMLButtonElement>());
   const transitionRunningRef = useRef(false);
   const lightboxTriggerRef = useRef<HTMLElement | null>(null);
   const lightboxCloseRef = useRef<HTMLButtonElement | null>(null);
@@ -242,7 +243,9 @@ export default function ProjectCards({
     if (!shouldUseNativeTransition()) {
       setOpenProjectId(null);
       setUsesNativeTransition(false);
-      window.requestAnimationFrame(() => card?.focus());
+      window.requestAnimationFrame(() =>
+        projectTriggerRefs.current.get(openProjectId)?.focus(),
+      );
       return;
     }
 
@@ -253,7 +256,9 @@ export default function ProjectCards({
     if (!startViewTransition) {
       setOpenProjectId(null);
       setUsesNativeTransition(false);
-      window.requestAnimationFrame(() => card?.focus());
+      window.requestAnimationFrame(() =>
+        projectTriggerRefs.current.get(openProjectId)?.focus(),
+      );
       return;
     }
 
@@ -274,13 +279,15 @@ export default function ProjectCards({
         .catch(() => {})
         .finally(() => {
           finishTransition(card);
-          card?.focus();
+          projectTriggerRefs.current.get(openProjectId)?.focus();
         });
     } catch {
       finishTransition(card);
       setOpenProjectId(null);
       setUsesNativeTransition(false);
-      window.requestAnimationFrame(() => card?.focus());
+      window.requestAnimationFrame(() =>
+        projectTriggerRefs.current.get(openProjectId)?.focus(),
+      );
     }
   }, [finishTransition, openProjectId]);
 
@@ -543,26 +550,11 @@ export default function ProjectCards({
                 else projectCardRefs.current.delete(project.id);
               }}
               className={styles.projectCard}
-              role={isClickable ? "button" : undefined}
-              tabIndex={isClickable ? 0 : undefined}
+              data-clickable={isClickable ? "true" : undefined}
               onClick={
                 isClickable
                   ? (event) => openModal(project.id, event.currentTarget)
                   : undefined
-              }
-              onKeyDown={
-                isClickable
-                  ? (event) => {
-                      if (event.key === "Enter" || event.key === " ") {
-                        event.preventDefault();
-                        openModal(project.id, event.currentTarget);
-                      }
-                    }
-                  : undefined
-              }
-              aria-haspopup={isClickable ? "dialog" : undefined}
-              aria-label={
-                isClickable ? `Open ${project.title} details` : undefined
               }
             >
               <span className={styles.projectIndex} aria-hidden="true">
@@ -570,10 +562,28 @@ export default function ProjectCards({
               </span>
 
               {isClickable ? (
-                <span className={styles.projectOpenHint} aria-hidden="true">
+                <button
+                  ref={(node) => {
+                    if (node) projectTriggerRefs.current.set(project.id, node);
+                    else projectTriggerRefs.current.delete(project.id);
+                  }}
+                  type="button"
+                  className={styles.projectOpenHint}
+                  aria-haspopup="dialog"
+                  aria-label={`Open ${project.title} details`}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    const card = event.currentTarget.closest<HTMLElement>("article");
+                    if (card) openModal(project.id, card);
+                  }}
+                >
                   <span>Take a look</span>
-                  <ArrowUpRight size={15} weight="regular" />
-                </span>
+                  <ArrowUpRight
+                    size={15}
+                    weight="regular"
+                    aria-hidden="true"
+                  />
+                </button>
               ) : null}
 
               <div className={styles.projectCardMain}>

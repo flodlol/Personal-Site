@@ -1,0 +1,22 @@
+# flodlol.dev
+
+> Personal portfolio of Jonas Meuleman, also known online as flodlol.
+
+Jonas is an Industrial Engineering student at KU Leuven and a software developer who builds web applications and developer tools.
+
+## Main sections
+
+- [Current and past projects](https://flodlol.dev/#current-projects)
+- [Learning timeline](https://flodlol.dev/#timeline)
+- [Contact information](https://flodlol.dev/#contact)
+- [GitHub profile](https://github.com/flodlol)
+
+## Featured projects
+
+- [Study-Track](https://study-track.app): a study tracking and academic planning application.
+- [Hand-Outs](https://hand-outs.com): a tool that turns lecture-slide PDFs into printable handouts.
+- [Statics NVM](https://sterkteleer.flodlol.dev): an educational statics solver with worked N, V, and M diagrams.
+
+## Source
+
+- [Personal-Site repository](https://github.com/flodlol/Personal-Site)

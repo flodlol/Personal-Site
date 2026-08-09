@@ -102,17 +102,18 @@ export default function TypingName({
     };
   }, [deletingMs, pauseMs, prefersReducedMotion, sanitizedWords, typingMs]);
 
-  const ariaLabel = sanitizedWords.join(" / ");
+  const accessibleName = sanitizedWords.join(", also known as ");
   const displayValue = prefersReducedMotion ? (sanitizedWords[0] ?? "") : value;
 
   return (
-    <span className={styles.typingName} aria-label={ariaLabel}>
-      <span aria-hidden="true">{displayValue}</span>
-      {prefersReducedMotion ? null : (
-        <span className={styles.typingCursor} aria-hidden="true">
-          |
-        </span>
-      )}
-    </span>
+    <>
+      <span className={styles.typingName} aria-hidden="true">
+        <span>{displayValue}</span>
+        {prefersReducedMotion ? null : (
+          <span className={styles.typingCursor}>|</span>
+        )}
+      </span>
+      <span className={styles.srOnly}>{accessibleName}</span>
+    </>
   );
 }
