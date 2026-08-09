@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import Script from "next/script";
 import "../styles/globals.css";
 
 const GA_MEASUREMENT_ID = "G-9TSXZ3V92H";
@@ -116,20 +115,38 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
         {process.env.NODE_ENV === "production" && (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-              strategy="afterInteractive"
-            />
-            <Script id="google-analytics" strategy="afterInteractive">
-              {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${GA_MEASUREMENT_ID}');
-              `}
-            </Script>
-          </>
+          <script
+            id="google-analytics-loader"
+            dangerouslySetInnerHTML={{
+              __html: `
+              (() => {
+                let loaded = false;
+                const loadAnalytics = () => {
+                  if (loaded) return;
+                  loaded = true;
+
+                  window.dataLayer = window.dataLayer || [];
+                  window.gtag = function(){window.dataLayer.push(arguments);};
+                  window.gtag('js', new Date());
+                  window.gtag('config', '${GA_MEASUREMENT_ID}');
+
+                  const script = document.createElement('script');
+                  script.async = true;
+                  script.src = 'https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}';
+                  document.head.appendChild(script);
+                };
+
+                ['click', 'keydown'].forEach((eventName) => {
+                  window.addEventListener(eventName, loadAnalytics, {
+                    once: true,
+                    passive: true,
+                  });
+                });
+
+              })();
+            `,
+            }}
+          />
         )}
         {children}
       </body>

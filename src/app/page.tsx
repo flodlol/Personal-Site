@@ -25,10 +25,11 @@ export default function Home() {
           <span className={styles.brandLogoFrame} aria-hidden="true">
             <Image
               className={styles.brandLogo}
-              src="/flod-banner.png"
+              src="/flod-banner-header.webp"
               alt=""
-              width={4338}
-              height={4050}
+              width={256}
+              height={239}
+              unoptimized
               priority
             />
           </span>

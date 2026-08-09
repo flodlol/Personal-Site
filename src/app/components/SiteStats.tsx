@@ -4,15 +4,15 @@ import { useEffect, useMemo, useState } from "react";
 import { Clock, Eye } from "@phosphor-icons/react";
 import styles from "../../styles/pages/home.module.css";
 
-const STATS_API_URL =
-  process.env.NEXT_PUBLIC_STATS_API_URL ?? "https://flodlol-stats.onrender.com";
-
 const REFRESH_INTERVAL_MS = 5 * 60 * 1000;
 const TICK_INTERVAL_MS = 1000;
 
 type Stats = {
-  visits: { total: number; uniqueToday: number };
-  stars: { total: number; repos: Array<{ repo: string; stars: number | null }> };
+  visits: { total: number | null; uniqueToday: number | null };
+  stars: {
+    total: number | null;
+    repos: Array<{ repo: string; stars: number | null }>;
+  };
 };
 
 function formatNumber(value: number) {
@@ -44,7 +44,7 @@ export default function SiteStats() {
 
     const recordVisit = () => {
       try {
-        fetch(`${STATS_API_URL}/visit`, {
+        fetch("/api/site-stats", {
           method: "POST",
           keepalive: true,
         }).catch(() => {});
@@ -55,7 +55,7 @@ export default function SiteStats() {
 
     const loadStats = async () => {
       try {
-        const response = await fetch(`${STATS_API_URL}/stats`, {
+        const response = await fetch("/api/site-stats", {
           cache: "no-store",
         });
         if (!response.ok) return;

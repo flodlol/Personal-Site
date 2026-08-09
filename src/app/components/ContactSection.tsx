@@ -1,6 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import {
   ArrowUpRight,
   Check,
@@ -34,9 +40,18 @@ const discordHandles = [
   { value: "@jonasjonsas", note: "most active" },
 ];
 
+const personalEmail = ["jonas.meuleman", "icloud.com"].join("@");
+const studyTrackEmail = ["jonas", "study-track.app"].join("@");
+const emptySubscribe = () => () => {};
+
 export default function ContactSection() {
   const [copiedHandle, setCopiedHandle] = useState<string | null>(null);
   const copiedTimeoutRef = useRef<number | null>(null);
+  const emailLinksReady = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
 
   useEffect(() => {
     return () => {
@@ -76,8 +91,10 @@ export default function ContactSection() {
       <div className={styles.contactLayout}>
         <a
           className={styles.contactPrimary}
-          href="mailto:jonas.meuleman@icloud.com"
-          aria-label="Email Jonas at jonas.meuleman@icloud.com"
+          href={emailLinksReady ? `mailto:${personalEmail}` : undefined}
+          aria-label={
+            emailLinksReady ? `Email Jonas at ${personalEmail}` : "Email Jonas"
+          }
         >
           <span className={styles.contactPrimaryTop}>
             <span className={styles.contactPrimaryIcon} aria-hidden="true">
@@ -93,7 +110,7 @@ export default function ContactSection() {
               Start a conversation
             </span>
             <span className={styles.contactPrimaryEmail}>
-              jonas.meuleman@icloud.com
+              {emailLinksReady ? personalEmail : "Email Jonas"}
             </span>
           </span>
 
@@ -202,11 +219,13 @@ export default function ContactSection() {
 
           <a
             className={styles.contactWorkLink}
-            href="mailto:jonas@study-track.app"
+            href={emailLinksReady ? `mailto:${studyTrackEmail}` : undefined}
           >
             <span>
               Building with Study-Track? Write to
-              <strong>jonas@study-track.app</strong>
+              <strong>
+                {emailLinksReady ? studyTrackEmail : "Study-Track"}
+              </strong>
             </span>
             <ArrowUpRight size={18} weight="regular" aria-hidden="true" />
           </a>
