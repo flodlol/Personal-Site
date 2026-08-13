@@ -3,6 +3,9 @@
   isolation: isolate;
   min-height: 100vh;
   overflow: hidden;
+  background:
+    linear-gradient(120deg, rgba(20, 24, 50, 0.22), rgba(8, 8, 10, 0.9) 42%, rgba(8, 8, 10, 0.97)),
+    #080808;
   --page-width: 1120px;
   --page-gutter: max(1.25rem, calc((100vw - var(--page-width)) / 2));
 }
@@ -21,10 +24,11 @@
     linear-gradient(116deg, transparent 4%, rgba(75, 87, 159, 0.22) 20%, rgba(183, 192, 255, 0.09) 29%, transparent 43%),
     linear-gradient(116deg, transparent 35%, rgba(56, 68, 132, 0.2) 51%, rgba(199, 206, 255, 0.075) 60%, transparent 74%),
     linear-gradient(116deg, transparent 68%, rgba(63, 76, 145, 0.18) 82%, rgba(183, 192, 255, 0.06) 88%, transparent 97%);
-  filter: blur(44px) saturate(145%);
-  mix-blend-mode: screen;
-  opacity: 0.96;
+  filter: blur(38px) saturate(125%);
+  mix-blend-mode: normal;
+  opacity: 0.78;
   transform: translate3d(-3%, -2%, 0) scale(1.08) rotate(-1.5deg);
+  will-change: opacity, transform;
 }
 
 .container::after {
@@ -33,9 +37,24 @@
   background:
     linear-gradient(116deg, transparent 0 17%, rgba(218, 222, 255, 0.052) 25%, transparent 34% 52%, rgba(174, 185, 255, 0.04) 61%, transparent 72%),
     linear-gradient(116deg, transparent 0 46%, rgba(255, 255, 255, 0.024) 51%, transparent 56%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #08080a 8%, #08080a 92%, transparent);
   mask-image: linear-gradient(to bottom, transparent, #08080a 8%, #08080a 92%, transparent);
-  opacity: 0.9;
+  opacity: 0.72;
   transform: translate3d(0, 0, 0) scale(1.04);
+  will-change: opacity, transform;
+}
+
+@supports (mix-blend-mode: screen) {
+  .container::before {
+    mix-blend-mode: screen;
+    opacity: 0.9;
+  }
+}
+
+@supports not ((mask-image: linear-gradient(#000, #000)) or (-webkit-mask-image: linear-gradient(#000, #000))) {
+  .container::after {
+    opacity: 0.5;
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -2905,6 +2924,44 @@ details.pythonProjectsSection > summary {
     -webkit-backdrop-filter: none;
   }
 
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .header {
+    background: #0e0e12;
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .heroSecondaryAction,
+  .heroSkills,
+  .projectCard,
+  .pythonProjectsSection,
+  .timelineNode,
+  .contactDiscord,
+  .contactSocialLink,
+  .contactWorkLink,
+  .contactHandle,
+  .modal,
+  .contactPrimary,
+  .contactPrimaryIcon,
+  .contactPrimaryArrow {
+    background: #16161b;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .projectCard {
+    border-color: rgba(232, 235, 255, 0.14);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      0 0.75rem 2.5rem rgba(3, 4, 12, 0.2);
+  }
+
+  .modalOverlay {
+    background: rgba(7, 7, 10, 0.96);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
