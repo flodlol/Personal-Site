@@ -24,9 +24,9 @@
     linear-gradient(116deg, transparent 4%, rgba(75, 87, 159, 0.22) 20%, rgba(183, 192, 255, 0.09) 29%, transparent 43%),
     linear-gradient(116deg, transparent 35%, rgba(56, 68, 132, 0.2) 51%, rgba(199, 206, 255, 0.075) 60%, transparent 74%),
     linear-gradient(116deg, transparent 68%, rgba(63, 76, 145, 0.18) 82%, rgba(183, 192, 255, 0.06) 88%, transparent 97%);
-  filter: blur(38px) saturate(125%);
+  filter: blur(34px) saturate(115%);
   mix-blend-mode: normal;
-  opacity: 0.78;
+  opacity: 0.56;
   transform: translate3d(-3%, -2%, 0) scale(1.08) rotate(-1.5deg);
   will-change: opacity, transform;
 }
@@ -42,13 +42,6 @@
   opacity: 0.72;
   transform: translate3d(0, 0, 0) scale(1.04);
   will-change: opacity, transform;
-}
-
-@supports (mix-blend-mode: screen) {
-  .container::before {
-    mix-blend-mode: screen;
-    opacity: 0.9;
-  }
 }
 
 @supports not ((mask-image: linear-gradient(#000, #000)) or (-webkit-mask-image: linear-gradient(#000, #000))) {
@@ -383,7 +376,7 @@
   background:
     radial-gradient(circle at 12% -20%, rgba(255, 255, 255, 0.2), transparent 30%),
     linear-gradient(108deg, rgba(255, 255, 255, 0.105), rgba(157, 172, 255, 0.055) 58%, rgba(255, 255, 255, 0.025)),
-    rgba(14, 14, 20, 0.38);
+    rgba(14, 14, 20, 0.72);
   border: 1px solid rgba(232, 235, 255, 0.2);
   border-radius: 0.85rem;
   box-shadow:
@@ -510,7 +503,7 @@ a.heroSkillLink:focus-visible .heroSkillIcon {
   background:
     radial-gradient(circle at 10% -10%, rgba(255, 255, 255, 0.16), transparent 32%),
     linear-gradient(120deg, rgba(255, 255, 255, 0.085), rgba(157, 172, 255, 0.045) 58%, rgba(255, 255, 255, 0.02)),
-    rgba(14, 14, 20, 0.4);
+    rgba(14, 14, 20, 0.74);
   border: 1px solid rgba(232, 235, 255, 0.19);
   border-radius: 0.9rem;
   box-shadow:
@@ -587,7 +580,7 @@ a.heroSkillLink:focus-visible .heroSkillIcon {
   background:
     radial-gradient(circle at 10% 0%, rgba(255, 255, 255, 0.1), transparent 30%),
     linear-gradient(120deg, rgba(255, 255, 255, 0.055), rgba(157, 172, 255, 0.035) 58%, rgba(255, 255, 255, 0.016)),
-    rgba(18, 18, 23, 0.66);
+    rgba(18, 18, 23, 0.84);
   border-color: rgba(255, 255, 255, 0.2);
 }
 
@@ -1755,7 +1748,7 @@ details.pythonProjectsSection > summary {
   padding: clamp(0.65rem, 2vw, 1.5rem);
   display: grid;
   place-items: center;
-  background: rgba(3, 3, 7, 0.76);
+  background: rgba(3, 3, 7, 0.86);
   backdrop-filter: blur(28px) saturate(135%);
   -webkit-backdrop-filter: blur(28px) saturate(135%);
 }
@@ -1770,8 +1763,8 @@ details.pythonProjectsSection > summary {
   flex-direction: column;
   background:
     linear-gradient(118deg, rgba(255, 255, 255, 0.075), transparent 24%),
-    radial-gradient(circle at 82% 8%, rgba(157, 172, 255, 0.095), transparent 30%),
-    rgba(13, 13, 18, 0.86);
+    radial-gradient(circle at 82% 8%, rgba(157, 172, 255, 0.07), transparent 30%),
+    rgba(13, 13, 18, 0.93);
   border: 1px solid rgba(236, 238, 255, 0.2);
   border-radius: 0.95rem;
   box-shadow:
