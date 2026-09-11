@@ -5,7 +5,7 @@ const STATS_API_URL =
   process.env.NEXT_PUBLIC_STATS_API_URL ??
   "https://flodlol-stats.onrender.com";
 
-const UPSTREAM_TIMEOUT_MS = 4_000;
+const UPSTREAM_TIMEOUT_MS = 30_000;
 
 const unavailableStats = {
   visits: { total: null, uniqueToday: null },

@@ -8,7 +8,7 @@ import { heroSkills } from "./content/skills";
 import { heroSkillTimeline } from "./content/skill-timeline";
 import SkillLogo from "./components/SkillLogo";
 import HeroTimeline from "./components/HeroTimeline";
-import TypingName from "./components/TypingName";
+import HeroName from "./components/HeroName";
 import SiteStats from "./components/SiteStats";
 
 export default function Home() {
@@ -48,16 +48,11 @@ export default function Home() {
               <div className={styles.heroCopy}>
                 <h1 className={styles.heroTitle}>
                   Hi, I&apos;m{" "}
-                  <TypingName
-                    words={["Jonas", "flodlol"]}
-                    typingMs={200}
-                    deletingMs={140}
-                    pauseMs={1800}
-                  />
+                  <HeroName />
                 </h1>
 
                 <p className={styles.heroSubtitle}>
-                  Industrial Engineering student at KU Leuven.
+                  Industrial Engineering student at KU Leuven (BE).
                   <br />I build webapps and tools on the side.
                   <br />Solo founder of{" "}
                   <a

@@ -53,7 +53,7 @@ export default function SiteStats() {
       }
     };
 
-    const loadStats = async () => {
+    const loadStats = async (allowRetry = true) => {
       try {
         const response = await fetch("/api/site-stats", {
           cache: "no-store",
@@ -61,9 +61,21 @@ export default function SiteStats() {
         if (!response.ok) return;
         const data = (await response.json()) as Stats;
         if (cancelled) return;
+        if (data.visits.total === null) {
+          if (allowRetry) {
+            window.setTimeout(() => {
+              if (!cancelled) loadStats(false);
+            }, 5_000);
+          }
+          return;
+        }
         setTotal(data.visits.total);
       } catch {
-        /* network errors are fine, footer will retry */
+        if (allowRetry) {
+          window.setTimeout(() => {
+            if (!cancelled) loadStats(false);
+          }, 5_000);
+        }
       }
     };
 
