@@ -56,6 +56,16 @@ export type Project = {
   };
   showLogoOnCard?: boolean;
   showLogoInModal?: boolean;
+  featured?: boolean;
+  badge?: string;
+  highlights?: string[];
+  featuredImage?: {
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+    url?: string;
+  };
   modal?: ProjectModal;
 };
 
@@ -63,10 +73,20 @@ export const currentProjects: Project[] = [
   {
     id: "study-track",
     title: "Study-Track",
-    period: "Oktober 2025 - Now",
+    period: "October 2025 - Now",
     stack: ["React (Vite)", "Firebase", "Stripe"],
     description:
-      "My main side project at the moment. I have been building it for a while now, it is past 5k users, and we are finally starting to see real growth.",
+      "Solo founder of Study-Track, now past 10k users, and a side project that turned into a real business. Product, engineering, support, and marketing are all me.",
+    featured: true,
+    badge: "Solo founder · 10k+ users",
+    highlights: ["Product", "Engineering", "Support", "Marketing"],
+    featuredImage: {
+      src: "/study-track/og-home.png",
+      alt: "Study-Track og image",
+      width: 1200,
+      height: 630,
+      url: "study-track.app",
+    },
     link: { href: "https://study-track.app", label: "Study-Track" },
     logo: {
       src: "/study-track/study-track-logo.png",
@@ -93,7 +113,7 @@ export const currentProjects: Project[] = [
         },
         {
           type: "paragraph",
-          text: "There is no team hiding behind it. I do the product, design, frontend, backend, and occasionally break all four at once. It is live, people use it, and I still change my mind about parts of it every week.",
+          text: "There is no team hiding behind it. I do the product, design, frontend, backend, customer support, marketing, and the decisions, and occasionally break all of it at once. It is live, past 10k users now, and I still change my mind about parts of it every week.",
         },
       ],
     },

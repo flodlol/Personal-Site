@@ -208,12 +208,14 @@
 }
 
 .nav a:hover,
-.nav a:focus-visible {
+.nav a:focus-visible,
+.nav a[data-active="true"] {
   color: #f4f4f5;
 }
 
 .nav a:hover::after,
-.nav a:focus-visible::after {
+.nav a:focus-visible::after,
+.nav a[data-active="true"]::after {
   transform: scaleX(1);
 }
 
@@ -351,11 +353,16 @@
 }
 
 .heroSubtitle {
-  max-width: 38rem;
+  max-width: 46rem;
   margin-top: 1.8rem;
   color: #a1a1a6;
   font-size: clamp(1rem, 1.5vw, 1.2rem);
   line-height: 1.65;
+}
+
+.heroSubtitleStrong {
+  color: #d6d6db;
+  font-weight: 600;
 }
 
 .heroSubtitleLink {
@@ -373,6 +380,113 @@
   color: #e2e7ff;
   text-decoration-color: rgba(196, 206, 255, 0.9);
   outline: none;
+}
+
+.heroBlurb {
+  max-width: 38rem;
+  margin-top: 1.1rem;
+  color: #b6b6bc;
+  font-size: clamp(0.95rem, 1.35vw, 1.1rem);
+  line-height: 1.65;
+}
+
+.linkPreview {
+  position: relative;
+  display: inline-flex;
+}
+
+.linkPreviewAnchor {
+  cursor: pointer;
+  border-radius: 0.25rem;
+}
+
+.linkPreviewCard {
+  position: absolute;
+  top: calc(100% + 0.7rem);
+  left: 0;
+  z-index: 40;
+  width: min(21rem, calc(100vw - 2.5rem));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: #d4d4d9;
+  background:
+    linear-gradient(135deg, rgba(157, 172, 255, 0.09), rgba(255, 255, 255, 0.015)),
+    rgba(13, 13, 18, 0.97);
+  border: 1px solid rgba(232, 235, 255, 0.2);
+  border-radius: 0.8rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 1.5rem 3.5rem rgba(3, 4, 12, 0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate3d(0, 0.4rem, 0);
+  transition:
+    opacity 180ms ease,
+    transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 180ms ease;
+}
+
+.linkPreviewCardOpen {
+  opacity: 1;
+  visibility: visible;
+  transform: translate3d(0, 0, 0);
+}
+
+.linkPreviewMedia {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #0b0b0f;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.linkPreviewMedia img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.linkPreviewBody {
+  min-width: 0;
+  padding: 0.8rem 0.9rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.32rem;
+}
+
+.linkPreviewTitle {
+  color: #ececf0;
+  font-size: 0.86rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.linkPreviewDescription {
+  color: #9b9ba1;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.linkPreviewMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #78787f;
+  font-size: 0.66rem;
+}
+
+.linkPreviewFavicon {
+  width: 0.8rem;
+  height: 0.8rem;
+  object-fit: contain;
 }
 
 .heroActions {
@@ -515,6 +629,40 @@ a.heroSkillLink:focus-visible .heroSkillIcon {
   transition: color 180ms ease;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .heroTitle {
+    animation: heroRise 620ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+
+  .heroSubtitle {
+    animation: heroRise 620ms 90ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+
+  .heroBlurb {
+    animation: heroRise 620ms 160ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+
+  .heroActions {
+    animation: heroRise 620ms 230ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+
+  .heroSkills {
+    animation: heroRise 620ms 300ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+}
+
+@keyframes heroRise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 1.2rem, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
 .section {
   width: min(var(--page-width), calc(100% - 2.5rem));
   margin: 0 auto;
@@ -525,6 +673,46 @@ a.heroSkillLink:focus-visible .heroSkillIcon {
 
 .sectionHeading {
   margin-bottom: 2.5rem;
+}
+
+.sectionHeadingSplit {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.sectionHeadingLink {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.55rem 0.9rem;
+  color: #c7c7cb;
+  font-size: 0.76rem;
+  font-weight: 550;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0.6rem;
+  transition:
+    color 160ms ease,
+    background 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.sectionHeadingLink svg {
+  color: #8993d4;
+}
+
+.sectionHeadingLink:hover,
+.sectionHeadingLink:focus-visible {
+  color: #f2f2f4;
+  background: rgba(157, 172, 255, 0.08);
+  border-color: rgba(157, 172, 255, 0.3);
+  transform: translateY(-1px);
+  outline: none;
 }
 
 .sectionTitle {
@@ -540,6 +728,103 @@ a.heroSkillLink:focus-visible .heroSkillIcon {
   color: #818187;
   font-size: 0.98rem;
   line-height: 1.6;
+}
+
+.pageHero {
+  width: min(var(--page-width), calc(100% - 2.5rem));
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4rem) 0 0;
+}
+
+.pageTitle {
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  font-size: clamp(2.6rem, 6vw, 4.75rem);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.055em;
+}
+
+.pageText {
+  max-width: 40rem;
+  margin-top: 1.1rem;
+  color: #818187;
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  line-height: 1.6;
+}
+
+.projectsArchiveSection {
+  width: min(var(--page-width), calc(100% - 2.5rem));
+  margin: 0 auto;
+  padding: clamp(3.5rem, 6vw, 5rem) 0;
+}
+
+.breadcrumbs {
+  width: fit-content;
+}
+
+.breadcrumbsList {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.breadcrumbItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.breadcrumbLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #9b9ba1;
+  font-size: 0.78rem;
+  font-weight: 500;
+  transition: color 160ms ease;
+}
+
+.breadcrumbLink svg {
+  color: #7a83c4;
+}
+
+.breadcrumbLink:hover,
+.breadcrumbLink:focus-visible {
+  color: #f2f2f4;
+  outline: none;
+}
+
+.breadcrumbLink:hover svg,
+.breadcrumbLink:focus-visible svg {
+  color: #b4bdff;
+}
+
+.breadcrumbSeparator {
+  color: #55555b;
+}
+
+.breadcrumbCurrent {
+  color: #c8ceff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .breadcrumbs {
+    animation: heroRise 480ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+
+  .pageTitle {
+    animation: heroRise 560ms 70ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+
+  .pageText {
+    animation: heroRise 560ms 140ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
 }
 
 .currentProjects,
@@ -759,6 +1044,122 @@ a.heroSkillLink:focus-visible .heroSkillIcon {
   color: #96969c;
   font-size: 0.92rem;
   line-height: 1.6;
+}
+
+.projectCard[data-featured="true"] {
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 20rem) 3.5rem;
+  column-gap: 0;
+  padding: 1.5rem 2rem 1.5rem 1.5rem;
+  border-color: rgba(157, 172, 255, 0.42);
+  background:
+    radial-gradient(circle at 10% -10%, rgba(157, 172, 255, 0.18), transparent 38%),
+    linear-gradient(120deg, rgba(157, 172, 255, 0.08), rgba(255, 255, 255, 0.02) 58%, rgba(157, 172, 255, 0.04)),
+    rgba(15, 15, 22, 0.8);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(157, 172, 255, 0.12),
+    0 0 0 1px rgba(157, 172, 255, 0.06),
+    0 1.5rem 4.5rem rgba(70, 82, 158, 0.16);
+}
+
+.projectCard[data-featured="true"]:hover,
+.projectCard[data-featured="true"]:focus-within {
+  border-color: rgba(183, 192, 255, 0.6);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.24),
+    inset 0 -1px 0 rgba(157, 172, 255, 0.16),
+    0 0 0 1px rgba(157, 172, 255, 0.1),
+    0 1.75rem 5rem rgba(80, 93, 175, 0.24);
+}
+
+.projectCard[data-featured="true"] .projectCardMain {
+  grid-column: 1;
+  grid-row: 1;
+  padding-right: 1.5rem;
+}
+
+.projectCard[data-featured="true"] .projectCardMedia {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+}
+
+.projectCardMedia {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1200 / 630;
+  overflow: hidden;
+  border-radius: 0.7rem;
+  background: #0b0b0f;
+  box-shadow: 0 1.25rem 3rem rgba(3, 4, 12, 0.4);
+}
+
+.projectCardLogoOverlay {
+  position: absolute;
+  top: 50%;
+  right: 2.75rem;
+  z-index: 2;
+  transform: translateY(-50%);
+  width: 5.5rem;
+  height: 5.5rem;
+  object-fit: contain;
+  filter: saturate(0.82) drop-shadow(0 0.5rem 1.25rem rgba(3, 4, 12, 0.55));
+}
+
+.projectCardLogoOverlay[data-dark-mark="true"] {
+  filter: invert(1) saturate(0.82)
+    drop-shadow(0 0.5rem 1.25rem rgba(3, 4, 12, 0.55));
+}
+
+.projectCardMediaImg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.projectCard:hover .projectCardMediaImg,
+.projectCard:focus-within .projectCardMediaImg {
+  transform: scale(1.03);
+}
+
+.projectBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.55rem;
+  color: #9dacff;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.projectHighlights {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 0.9rem;
+  padding: 0;
+  list-style: none;
+}
+
+.projectHighlight {
+  color: #9b9ba1;
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+.projectHighlight + .projectHighlight::before {
+  content: "";
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  margin: 0 0.6rem;
+  border-radius: 999px;
+  background: #4b4b52;
+  vertical-align: middle;
 }
 
 .projectLink {
@@ -1251,6 +1652,28 @@ details.pythonProjectsSection > summary {
 
   to {
     transform: translate3d(0, 0, 0);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .projectCard {
+      animation: cardReveal linear both;
+      animation-timeline: view();
+      animation-range: entry 4% cover 22%;
+    }
+  }
+}
+
+@keyframes cardReveal {
+  from {
+    opacity: 0;
+    translate: 0 1rem;
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
   }
 }
 
@@ -2772,6 +3195,31 @@ details.pythonProjectsSection > summary {
   .projectCardMain {
     grid-column: 1;
     grid-row: 2;
+  }
+
+  .projectCard[data-featured="true"] {
+    grid-template-columns: 1fr;
+    column-gap: 0;
+    padding: 1.35rem;
+  }
+
+  .projectCard[data-featured="true"] .projectCardMedia {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .projectCard[data-featured="true"] .projectCardMain {
+    grid-column: 1;
+    grid-row: 2;
+    padding-right: 0;
+  }
+
+  .projectCard[data-featured="true"] .projectCardLogoOverlay {
+    top: 1.6rem;
+    right: 1.6rem;
+    transform: none;
+    width: 3.25rem;
+    height: 3.25rem;
   }
 
   .projectLogo {

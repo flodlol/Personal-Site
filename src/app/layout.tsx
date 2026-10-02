@@ -4,7 +4,7 @@ import "../styles/globals.css";
 const GA_MEASUREMENT_ID = "G-9TSXZ3V92H";
 
 const description =
-  "Jonas Meuleman, known online as flodlol, is an Industrial Engineering student at KU Leuven who builds webapps and tools on the side — including Study-Track, Hand-Outs, and Statics NVM.";
+  "Jonas Meuleman (flodlol) is an Industrial Engineering student, option Electromechanics, at KU Leuven, and the solo founder of Study-Track, a study tool with 10k+ users. He builds webapps and developer tools.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://flodlol.dev"),
@@ -61,7 +61,7 @@ const personJsonLd = {
   url: "https://flodlol.dev",
   image: "https://flodlol.dev/flod-icon.png",
   description,
-  jobTitle: "Industrial Engineering Student & Software Developer",
+  jobTitle: "Industrial Engineering Student (Electromechanics) & Solo Founder of Study-Track",
   affiliation: {
     "@type": "CollegeOrUniversity",
     name: "KU Leuven",
@@ -79,6 +79,9 @@ const personJsonLd = {
     "Firebase",
     "Automation",
     "Developer Tooling",
+    "Entrepreneurship",
+    "Customer Support",
+    "Marketing",
   ],
   owns: [
     {
