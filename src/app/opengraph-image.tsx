@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { heroSkills } from "./content/skills";
 
 export const alt =
-  "Jonas — Industrial Engineering student at KU Leuven who builds webapps and tools on the side";
+  "Jonas, Industrial Engineering student at KU Leuven who builds webapps and tools on the side";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -113,7 +113,7 @@ export default async function OpengraphImage() {
                 </div>
                 <div style={{ display: "flex" }}>
                   {" "}
-                  — solo founder of Study-Track.
+                  , solo founder of Study-Track.
                 </div>
               </div>
             </div>

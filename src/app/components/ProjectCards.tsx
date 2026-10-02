@@ -551,6 +551,7 @@ export default function ProjectCards({
               }}
               className={styles.projectCard}
               data-clickable={isClickable ? "true" : undefined}
+              data-featured={project.featured ? "true" : undefined}
               onClick={
                 isClickable
                   ? (event) => openModal(project.id, event.currentTarget)
@@ -587,6 +588,9 @@ export default function ProjectCards({
               ) : null}
 
               <div className={styles.projectCardMain}>
+                {project.badge ? (
+                  <span className={styles.projectBadge}>{project.badge}</span>
+                ) : null}
                 <h3 className={styles.projectTitle}>{project.title}</h3>
                 {project.period || stack ? (
                   <div className={styles.projectMeta}>
@@ -603,6 +607,15 @@ export default function ProjectCards({
                 <p className={styles.projectDescription}>
                   {project.description}
                 </p>
+                {project.highlights?.length ? (
+                  <ul className={styles.projectHighlights}>
+                    {project.highlights.map((highlight) => (
+                      <li key={highlight} className={styles.projectHighlight}>
+                        {highlight}
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
                 <div className={styles.projectLinkRow}>
                   {primaryLink ? (
                     <a
@@ -626,7 +639,34 @@ export default function ProjectCards({
                 </div>
               </div>
 
-              {project.logo && project.showLogoOnCard !== false && !hideLogos ? (
+              {project.featured && project.featuredImage ? (
+                <>
+                  <div className={styles.projectCardMedia} aria-hidden="true">
+                    <Image
+                      className={styles.projectCardMediaImg}
+                      src={project.featuredImage.src}
+                      alt=""
+                      width={project.featuredImage.width}
+                      height={project.featuredImage.height}
+                      sizes="(max-width: 768px) 100vw, 480px"
+                    />
+                  </div>
+                  {project.logo ? (
+                    <Image
+                      className={styles.projectCardLogoOverlay}
+                      src={project.logo.src}
+                      alt=""
+                      width={88}
+                      height={88}
+                      data-dark-mark={
+                        project.logo.darkMark ? "true" : undefined
+                      }
+                    />
+                  ) : null}
+                </>
+              ) : project.logo &&
+                project.showLogoOnCard !== false &&
+                !hideLogos ? (
                 <div className={styles.projectCardAside} aria-hidden="true">
                   <Image
                     className={styles.projectLogo}

@@ -1,45 +1,20 @@
-import Image from "next/image";
 import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import styles from "../styles/pages/home.module.css";
 import ProjectsSection from "./components/ProjectsSection";
-import PastProjectsSection from "./components/PastProjectsSection";
 import ContactSection from "./components/ContactSection";
 import { heroSkills } from "./content/skills";
 import { heroSkillTimeline } from "./content/skill-timeline";
 import SkillLogo from "./components/SkillLogo";
 import HeroTimeline from "./components/HeroTimeline";
 import HeroName from "./components/HeroName";
-import SiteStats from "./components/SiteStats";
+import LinkPreview from "./components/LinkPreview";
+import SiteHeader from "./components/SiteHeader";
+import SiteFooter from "./components/SiteFooter";
 
 export default function Home() {
-  const year = new Date().getFullYear();
-
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <a
-          className={styles.brand}
-          href="#top"
-          aria-label="flodlol, back to top"
-        >
-          <span className={styles.brandLogoFrame} aria-hidden="true">
-            <Image
-              className={styles.brandLogo}
-              src="/flod-banner-header.webp"
-              alt=""
-              width={256}
-              height={239}
-              unoptimized
-              priority
-            />
-          </span>
-        </a>
-        <nav className={styles.nav} aria-label="Primary">
-          <a href="#current-projects">Projects</a>
-          <a href="#timeline">Timeline</a>
-          <a href="#contact">Contact</a>
-        </nav>
-      </header>
+      <SiteHeader home />
 
       <main className={styles.main}>
         <section className={styles.hero} id="top">
@@ -52,18 +27,37 @@ export default function Home() {
                 </h1>
 
                 <p className={styles.heroSubtitle}>
-                  Industrial Engineering student at KU Leuven (BE).
-                  <br />I build webapps and tools on the side.
-                  <br />Solo founder of{" "}
-                  <a
+                  <strong className={styles.heroSubtitleStrong}>
+                    Industrial Engineering
+                  </strong>{" "}
+                  student at{" "}
+                  <LinkPreview
+                    className={styles.heroSubtitleLink}
+                    href="https://iiw.kuleuven.be/english/index.html"
+                  >
+                    KU Leuven
+                  </LinkPreview>
+                  , option{" "}
+                  <strong className={styles.heroSubtitleStrong}>
+                    Electromechanics
+                  </strong>
+                  .
+                  <br />I build webapps and tools people actually use.
+                </p>
+
+                <p className={styles.heroBlurb}>
+                  Solo founder of{" "}
+                  <LinkPreview
                     className={styles.heroSubtitleLink}
                     href="https://study-track.app"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    image="/study-track/og-home.png"
                   >
                     Study-Track
-                  </a>
-                  .
+                  </LinkPreview>
+                  , the study app that just crossed 10k users. I&apos;m the whole
+                  team: product, engineering, support, and marketing. When
+                  I&apos;m not shipping, I&apos;m writing code for fun, and
+                  breaking things on purpose to learn how they work.
                 </p>
                 <span className={styles.srOnly}>
                   Jonas Meuleman, also known online as flodlol.
@@ -130,7 +124,6 @@ export default function Home() {
         </section>
 
         <ProjectsSection />
-        <PastProjectsSection />
 
         <section
           className={`${styles.section} ${styles.timelineSection}`}
@@ -152,44 +145,7 @@ export default function Home() {
         <ContactSection />
       </main>
 
-      <footer className={styles.footer}>
-        <div className={styles.footerContent}>
-          <div className={styles.footerLeft}>
-            <Image
-              className={styles.calypsoLogo}
-              src="/calypso-logo.png"
-              alt=""
-              width={28}
-              height={28}
-            />
-            <div className={styles.footerLeftText}>
-              <span className={styles.footerText}>
-                A Calypso Inc. production.
-              </span>
-              <span className={styles.footerText}>
-                © {year} Jonas Meuleman. All rights reserved.
-              </span>
-            </div>
-          </div>
-
-          <div className={styles.footerRight}>
-            <SiteStats />
-            <span className={styles.footerText}>
-              This project is open source on{" "}
-              <a
-                className={styles.footerLink}
-                href="https://github.com/flodlol/Personal-Site"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Personal-Site source code on GitHub"
-              >
-                GitHub
-              </a>
-              .
-            </span>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }
